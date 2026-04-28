@@ -1,25 +1,31 @@
-import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router';
-import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingBag, X, Plus, Minus, ShoppingCart } from 'lucide-react';
-import { useCart } from './CartProvider';
-import { useLanguage } from './LanguageProvider';
+import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router";
+import { motion, AnimatePresence } from "motion/react";
+import { ShoppingBag, X, Plus, Minus, ShoppingCart } from "lucide-react";
+import { useCart } from "./CartProvider";
+import { useLanguage } from "./LanguageProvider";
 
 export function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { items, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  const { items, removeFromCart, updateQuantity, totalItems, totalPrice } =
+    useCart();
   const { t, language } = useLanguage();
+  const dropdownDesktopAlignment =
+    language === "ar" ? "sm:left-0 sm:right-auto" : "sm:right-0 sm:left-auto";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -44,13 +50,16 @@ export function CartDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden z-50"
+            className={`fixed left-2 right-2 top-16 z-50 bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-5rem)] sm:absolute sm:top-full sm:mt-2 sm:w-96 sm:max-w-[calc(100vw-2rem)] sm:max-h-none ${dropdownDesktopAlignment}`}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
-              <h3 className="flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h3
+                className="flex items-center gap-2"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
                 <ShoppingCart className="w-5 h-5" />
-                {language === 'ar' ? 'سلة التسوق' : 'Shopping Cart'}
+                {language === "ar" ? "سلة التسوق" : "Shopping Cart"}
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
@@ -61,12 +70,12 @@ export function CartDropdown() {
             </div>
 
             {/* Cart Items */}
-            <div className="max-h-96 overflow-y-auto">
+            <div className="max-h-[min(24rem,calc(100vh-14rem))] overflow-y-auto sm:max-h-96">
               {items.length === 0 ? (
                 <div className="p-8 text-center">
                   <ShoppingBag className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-30" />
                   <p className="text-muted-foreground">
-                    {language === 'ar' ? 'سلتك فارغة' : 'Your cart is empty'}
+                    {language === "ar" ? "سلتك فارغة" : "Your cart is empty"}
                   </p>
                 </div>
               ) : (
@@ -83,40 +92,69 @@ export function CartDropdown() {
                       <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-muted">
                         <img
                           src={item.image}
-                          alt={language === 'ar' ? item.nameAr || item.name : item.name}
+                          alt={
+                            language === "ar"
+                              ? item.nameAr || item.name
+                              : item.name
+                          }
                           className="w-full h-full object-cover"
                         />
                       </div>
 
                       {/* Details */}
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm mb-1 truncate" style={{ fontFamily: 'var(--font-heading)' }}>
-                          {language === 'ar' ? item.nameAr || item.name : item.name}
+                        <h4
+                          className="text-sm mb-1 truncate"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
+                          {language === "ar"
+                            ? item.nameAr || item.name
+                            : item.name}
                         </h4>
 
                         {/* Variants */}
-                        {item.variants && Object.keys(item.variants).length > 0 && (
-                          <div className="mb-2">
-                            {Object.entries(item.variants).map(([key, value]) => (
-                              <p key={key} className="text-xs text-muted-foreground">
-                                {key}: {value}
-                              </p>
-                            ))}
-                          </div>
-                        )}
+                        {item.variants &&
+                          Object.keys(item.variants).length > 0 && (
+                            <div className="mb-2">
+                              {Object.entries(item.variants).map(
+                                ([key, value]) => (
+                                  <p
+                                    key={key}
+                                    className="text-xs text-muted-foreground"
+                                  >
+                                    {key}: {value}
+                                  </p>
+                                ),
+                              )}
+                            </div>
+                          )}
 
                         {/* Quantity Controls */}
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => updateQuantity(item.id, item.quantity - 1, item.variants)}
+                              onClick={() =>
+                                updateQuantity(
+                                  item.id,
+                                  item.quantity - 1,
+                                  item.variants,
+                                )
+                              }
                               className="w-6 h-6 rounded-md border border-border hover:border-primary hover:bg-muted transition-colors flex items-center justify-center"
                             >
                               <Minus className="w-3 h-3" />
                             </button>
-                            <span className="text-sm w-8 text-center">{item.quantity}</span>
+                            <span className="text-sm w-8 text-center">
+                              {item.quantity}
+                            </span>
                             <button
-                              onClick={() => updateQuantity(item.id, item.quantity + 1, item.variants)}
+                              onClick={() =>
+                                updateQuantity(
+                                  item.id,
+                                  item.quantity + 1,
+                                  item.variants,
+                                )
+                              }
                               className="w-6 h-6 rounded-md border border-border hover:border-primary hover:bg-muted transition-colors flex items-center justify-center"
                             >
                               <Plus className="w-3 h-3" />
@@ -125,10 +163,12 @@ export function CartDropdown() {
 
                           <div className="flex items-center gap-2">
                             <p className="text-sm">
-                              {t('common.sar')} {item.price * item.quantity}
+                              {t("common.sar")} {item.price * item.quantity}
                             </p>
                             <button
-                              onClick={() => removeFromCart(item.id, item.variants)}
+                              onClick={() =>
+                                removeFromCart(item.id, item.variants)
+                              }
                               className="p-1 hover:bg-destructive/10 hover:text-destructive rounded transition-colors"
                             >
                               <X className="w-4 h-4" />
@@ -147,10 +187,13 @@ export function CartDropdown() {
               <div className="p-4 border-t border-border bg-muted/30">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm text-muted-foreground">
-                    {language === 'ar' ? 'المجموع' : 'Total'}
+                    {language === "ar" ? "المجموع" : "Total"}
                   </span>
-                  <span className="text-xl" style={{ fontFamily: 'var(--font-heading)' }}>
-                    {t('common.sar')} {totalPrice}
+                  <span
+                    className="text-xl"
+                    style={{ fontFamily: "var(--font-heading)" }}
+                  >
+                    {t("common.sar")} {totalPrice}
                   </span>
                 </div>
 
@@ -160,7 +203,7 @@ export function CartDropdown() {
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  {language === 'ar' ? 'إتمام الشراء' : 'Checkout'}
+                  {language === "ar" ? "إتمام الشراء" : "Checkout"}
                 </Link>
               </div>
             )}
