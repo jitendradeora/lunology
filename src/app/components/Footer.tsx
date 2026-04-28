@@ -199,7 +199,7 @@ export function Footer() {
             {/* Visa */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/img/pay/visa-card-pay.png"
+                src="../src/imports/pay/visa-card-pay.png"
                 alt="Visa"
                 className="w-full h-full object-contain"
               />
@@ -208,7 +208,7 @@ export function Footer() {
             {/* Mastercard */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/img/pay/mastercard-card-pay.png"
+                src="../src/imports/pay/mastercard-card-pay.png"
                 alt="Mastercard"
                 className="w-full h-full object-contain"
               />
@@ -217,7 +217,7 @@ export function Footer() {
             {/* Mada */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/img/pay/mada-card-pay.png"
+                src="../src/imports/pay/mada-card-pay.png"
                 alt="Mada"
                 className="w-full h-full object-contain"
               />
@@ -226,7 +226,7 @@ export function Footer() {
             {/* Tamara */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/img/pay/tamara-card-pay.png"
+                src="../src/imports/pay/tamara-card-pay.png"
                 alt="Tamara"
                 className="w-full h-full object-contain"
               />
@@ -235,7 +235,7 @@ export function Footer() {
             {/* Paypal */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/img/pay/paypal-pay.png"
+                src="../src/imports/pay/paypal-pay.png"
                 alt="Paypal"
                 className="w-full h-full object-contain"
               />
@@ -244,7 +244,7 @@ export function Footer() {
             {/* Apple Pay */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/img/pay/apple-card-pay.png"
+                src="../src/imports/pay/apple-card-pay.png"
                 alt="Apple Pay"
                 className="w-full h-full object-contain"
               />
