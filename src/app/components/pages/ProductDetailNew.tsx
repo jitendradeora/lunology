@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -199,6 +199,10 @@ export function ProductDetail() {
     "description" | "features" | "specs"
   >("description");
   const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [id]);
 
   const discount = product.originalPrice
     ? Math.round(

@@ -48,7 +48,7 @@ export function HeroWithMoon() {
               transition={{ duration: 1 }}
             >
               <motion.div
-                className={`flex justify-center mb-4 sm:mb-6 ${language === "ar" ? "lg:justify-end" : "lg:justify-start"}`}
+                className={`flex justify-center mb-4 sm:mb-6 ${language === "ar" ? "lg:justify-start" : "lg:justify-start"}`}
                 animate={{
                   y: [0, -10, 0],
                 }}
@@ -75,7 +75,7 @@ export function HeroWithMoon() {
               </p>
 
               <div
-                className={`flex justify-center ${language === "ar" ? "lg:justify-end" : "lg:justify-start"}`}
+                className={`flex justify-center ${language === "ar" ? "lg:justify-start" : "lg:justify-start"}`}
               >
                 <Link
                   to="/shop"
