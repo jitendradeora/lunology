@@ -321,7 +321,11 @@ export function MoonPhaseWidget() {
           <div className="flex items-center justify-center gap-2 mb-3">
             <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
             <div className="relative">
+              <label htmlFor="moon-phase-location" className="sr-only">
+                {language === "ar" ? "اختر الموقع" : "Select location"}
+              </label>
               <select
+                id="moon-phase-location"
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
                 className="appearance-none bg-card text-foreground border border-border rounded-lg px-3 py-1.5 pr-8 text-xs hover:border-primary transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"

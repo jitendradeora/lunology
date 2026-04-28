@@ -311,7 +311,11 @@ export function Shop() {
               </div>
 
               {/* Sort */}
+              <label htmlFor="shop-sort-select" className="sr-only">
+                {language === 'ar' ? 'ترتيب المنتجات' : 'Sort products'}
+              </label>
               <select
+                id="shop-sort-select"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="px-4 py-2 bg-muted border-2 border-transparent rounded-xl hover:border-primary transition-colors text-sm cursor-pointer"
