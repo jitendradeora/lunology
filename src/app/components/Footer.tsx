@@ -12,6 +12,8 @@ import applePayIcon from "../../imports/pay/apple-card-pay.png";
 export function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
+  const quickLinksId = "footer-quick-links";
+  const legalLinksId = "footer-legal-links";
 
   return (
     <footer className="relative bg-gradient-to-b from-background to-muted/30 border-t border-border overflow-hidden">
@@ -40,8 +42,11 @@ export function Footer() {
           {/* Quick Links - Collapsible on Mobile */}
           <div>
             <button
+              type="button"
               onClick={() => setQuickLinksOpen(!quickLinksOpen)}
               className="flex items-center justify-between w-full mb-4 text-sm tracking-wider uppercase text-secondary md:cursor-default"
+              aria-expanded={quickLinksOpen}
+              aria-controls={quickLinksId}
             >
               <span>Quick Links</span>
               <ChevronDown
@@ -75,6 +80,7 @@ export function Footer() {
             <AnimatePresence>
               {quickLinksOpen && (
                 <motion.div
+                  id={quickLinksId}
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
@@ -107,8 +113,11 @@ export function Footer() {
           {/* Legal - Collapsible on Mobile */}
           <div>
             <button
+              type="button"
               onClick={() => setLegalOpen(!legalOpen)}
               className="flex items-center justify-between w-full mb-4 text-sm tracking-wider uppercase text-secondary md:cursor-default"
+              aria-expanded={legalOpen}
+              aria-controls={legalLinksId}
             >
               <span>Legal</span>
               <ChevronDown
@@ -142,6 +151,7 @@ export function Footer() {
             <AnimatePresence>
               {legalOpen && (
                 <motion.div
+                  id={legalLinksId}
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}

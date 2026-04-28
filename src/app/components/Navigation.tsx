@@ -24,6 +24,9 @@ export function Navigation() {
   const [printedBooksMenu, setPrintedBooksMenu] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
+  const digitalMenuId = "digital-books-menu";
+  const printedMenuId = "printed-books-menu";
+  const mobileMenuId = "mobile-nav-menu";
 
   const digitalProducts = [
     {
@@ -114,8 +117,24 @@ export function Navigation() {
               className="relative"
               onMouseEnter={() => setDigitalBooksMenu(true)}
               onMouseLeave={() => setDigitalBooksMenu(false)}
+              onFocusCapture={() => setDigitalBooksMenu(true)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                  setDigitalBooksMenu(false);
+                }
+              }}
             >
-              <button className="flex items-center gap-1 text-sm tracking-wide hover:text-primary transition-colors">
+              <button
+                type="button"
+                className="flex items-center gap-1 text-sm tracking-wide hover:text-primary transition-colors"
+                aria-expanded={digitalBooksMenu}
+                aria-controls={digitalMenuId}
+                aria-label={
+                  language === "ar"
+                    ? "فتح قائمة الكتب الرقمية"
+                    : "Toggle digital books menu"
+                }
+              >
                 {language === "ar" ? "الكتب الرقمية" : "Digital Books"}
                 <ChevronDown
                   className="w-4 h-4 transition-transform"
@@ -133,6 +152,8 @@ export function Navigation() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
+                    id={digitalMenuId}
+                    role="menu"
                     className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[650px] bg-popover/95 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-2xl"
                   >
                     {/* Mega Menu Header */}
@@ -219,8 +240,24 @@ export function Navigation() {
               className="relative"
               onMouseEnter={() => setPrintedBooksMenu(true)}
               onMouseLeave={() => setPrintedBooksMenu(false)}
+              onFocusCapture={() => setPrintedBooksMenu(true)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                  setPrintedBooksMenu(false);
+                }
+              }}
             >
-              <button className="flex items-center gap-1 text-sm tracking-wide hover:text-primary transition-colors">
+              <button
+                type="button"
+                className="flex items-center gap-1 text-sm tracking-wide hover:text-primary transition-colors"
+                aria-expanded={printedBooksMenu}
+                aria-controls={printedMenuId}
+                aria-label={
+                  language === "ar"
+                    ? "فتح قائمة الكتب المطبوعة"
+                    : "Toggle printed books menu"
+                }
+              >
                 {language === "ar" ? "الكتب المطبوعة" : "Printed Books"}
                 <ChevronDown
                   className="w-4 h-4 transition-transform"
@@ -238,6 +275,8 @@ export function Navigation() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
+                    id={printedMenuId}
+                    role="menu"
                     className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[650px] bg-popover/95 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-2xl"
                   >
                     {/* Mega Menu Header */}
@@ -320,6 +359,7 @@ export function Navigation() {
             </div>
 
             <button
+              type="button"
               onClick={() => setLanguage(language === "en" ? "ar" : "en")}
               className="flex items-center gap-1 p-2 hover:text-primary transition-colors"
               aria-label="Toggle language"
@@ -329,6 +369,7 @@ export function Navigation() {
             </button>
 
             <button
+              type="button"
               onClick={toggleTheme}
               className="p-2 hover:text-primary transition-colors"
               aria-label="Toggle theme"
@@ -346,7 +387,14 @@ export function Navigation() {
           {/* Mobile Menu Button & Cart for Mobile */}
           <div className="md:hidden flex items-center gap-2">
             <CartDropdown />
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              aria-controls={mobileMenuId}
+            >
               <Menu className="w-6 h-6" />
             </button>
           </div>
@@ -375,6 +423,7 @@ export function Navigation() {
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className={`fixed inset-y-0 ${language === "ar" ? "left-0 border-r" : "right-0 border-l"} w-[90%] sm:w-[85%] max-w-sm bg-background border-border shadow-2xl z-[10000] md:hidden flex flex-col`}
                 style={{ height: "100vh" }}
+                id={mobileMenuId}
               >
                 {/* Mobile Menu Header */}
                 <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border bg-gradient-to-r from-primary/5 to-transparent shrink-0">
@@ -442,6 +491,7 @@ export function Navigation() {
                     {/* Settings */}
                     <div className="pt-6 space-y-2 border-t border-border mt-6">
                       <button
+                        type="button"
                         onClick={() =>
                           setLanguage(language === "en" ? "ar" : "en")
                         }
@@ -451,6 +501,7 @@ export function Navigation() {
                         <span>{language === "en" ? "العربية" : "English"}</span>
                       </button>
                       <button
+                        type="button"
                         onClick={toggleTheme}
                         className="flex items-center gap-3 py-3 px-4 w-full rounded-lg hover:bg-muted transition-colors"
                       >

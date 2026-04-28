@@ -100,7 +100,10 @@ export function Home() {
 
       {/* About Preview */}
       <section className="py-24 px-4 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background"></div>
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background"
+          aria-hidden="true"
+        ></div>
         <div className="relative max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -210,7 +213,7 @@ export function Home() {
 
       {/* Philosophy Section */}
       <section className="py-24 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 opacity-5" aria-hidden="true">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary rounded-full blur-[150px]"></div>
         </div>
 
@@ -262,9 +265,15 @@ export function Home() {
               offerings
             </p>
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <label htmlFor="newsletter-email" className="sr-only">
+                Email address
+              </label>
               <input
+                id="newsletter-email"
                 type="email"
                 placeholder="Your email"
+                autoComplete="email"
+                required
                 className="flex-1 px-6 py-3.5 bg-input-background border-2 border-border rounded-full focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
               />
               <button

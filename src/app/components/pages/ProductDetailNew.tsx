@@ -327,6 +327,7 @@ export function ProductDetail() {
                   <div className="grid grid-cols-4 gap-3">
                     {product.images.map((image: string, index: number) => (
                       <button
+                        type="button"
                         key={index}
                         onClick={() => setSelectedImage(index)}
                         className={`relative overflow-hidden rounded-lg aspect-square border-2 transition-all ${
@@ -435,6 +436,7 @@ export function ProductDetail() {
                     <div className="flex flex-wrap gap-3">
                       {variant.options.map((option: string) => (
                         <button
+                          type="button"
                           key={option}
                           onClick={() =>
                             setSelectedVariants({
@@ -462,6 +464,7 @@ export function ProductDetail() {
                   </h3>
                   <div className="flex items-center gap-3">
                     <button
+                      type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="w-12 h-12 border-2 border-border rounded-xl hover:border-primary hover:bg-muted transition-colors"
                     >
@@ -469,6 +472,7 @@ export function ProductDetail() {
                     </button>
                     <span className="w-16 text-center text-lg">{quantity}</span>
                     <button
+                      type="button"
                       onClick={() => setQuantity(quantity + 1)}
                       className="w-12 h-12 border-2 border-border rounded-xl hover:border-primary hover:bg-muted transition-colors"
                     >
@@ -480,6 +484,7 @@ export function ProductDetail() {
                 {/* Actions */}
                 <div className="flex gap-3">
                   <button
+                    type="button"
                     onClick={handleAddToCart}
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={
@@ -499,6 +504,7 @@ export function ProductDetail() {
                     {t("product.addToCart")}
                   </button>
                   <button
+                    type="button"
                     onClick={() => setIsFavorite(!isFavorite)}
                     className={`p-4 border-2 rounded-xl transition-all ${
                       isFavorite
@@ -529,7 +535,9 @@ export function ProductDetail() {
               <div className="border-b border-border mb-8">
                 <div className="flex gap-8">
                   <button
+                    type="button"
                     onClick={() => setActiveTab("description")}
+                    aria-pressed={activeTab === "description"}
                     className={`pb-4 text-sm tracking-wide uppercase transition-colors relative ${
                       activeTab === "description"
                         ? "text-foreground"
@@ -545,7 +553,9 @@ export function ProductDetail() {
                     )}
                   </button>
                   <button
+                    type="button"
                     onClick={() => setActiveTab("features")}
+                    aria-pressed={activeTab === "features"}
                     className={`pb-4 text-sm tracking-wide uppercase transition-colors relative ${
                       activeTab === "features"
                         ? "text-foreground"
@@ -562,7 +572,9 @@ export function ProductDetail() {
                   </button>
                   {product.specifications && (
                     <button
+                      type="button"
                       onClick={() => setActiveTab("specs")}
+                      aria-pressed={activeTab === "specs"}
                       className={`pb-4 text-sm tracking-wide uppercase transition-colors relative ${
                         activeTab === "specs"
                           ? "text-foreground"
@@ -758,6 +770,7 @@ export function ProductDetail() {
               onClick={() => setLightboxOpen(false)}
             >
               <button
+                type="button"
                 onClick={() => setLightboxOpen(false)}
                 className="absolute top-4 right-4 p-2 text-white hover:bg-white/10 rounded-full transition-colors"
               >

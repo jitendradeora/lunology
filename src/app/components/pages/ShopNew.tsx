@@ -236,16 +236,21 @@ export function Shop() {
             {/* Left side - Category filters */}
             <div className="flex flex-wrap items-center gap-3">
               <button
+                type="button"
                 onClick={() => setShowFilters(!showFilters)}
                 className="lg:hidden flex items-center gap-2 px-4 py-2 border-2 border-border rounded-xl hover:border-primary transition-colors"
+                aria-expanded={showFilters}
+                aria-controls="shop-filter-controls"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 {t('shop.filters')}
               </button>
 
-              <div className={`${showFilters ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-2`}>
+              <div id="shop-filter-controls" className={`${showFilters ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-2`}>
                 <button
+                  type="button"
                   onClick={() => setSelectedCategory('all')}
+                  aria-pressed={selectedCategory === 'all'}
                   className={`px-4 py-2 rounded-xl transition-all text-sm ${
                     selectedCategory === 'all'
                       ? 'bg-primary text-primary-foreground shadow-lg'
@@ -255,7 +260,9 @@ export function Shop() {
                   {t('shop.allProducts')}
                 </button>
                 <button
+                  type="button"
                   onClick={() => setSelectedCategory('physical')}
+                  aria-pressed={selectedCategory === 'physical'}
                   className={`px-4 py-2 rounded-xl transition-all text-sm ${
                     selectedCategory === 'physical'
                       ? 'bg-primary text-primary-foreground shadow-lg'
@@ -265,7 +272,9 @@ export function Shop() {
                   {t('shop.physical')}
                 </button>
                 <button
+                  type="button"
                   onClick={() => setSelectedCategory('digital')}
+                  aria-pressed={selectedCategory === 'digital'}
                   className={`px-4 py-2 rounded-xl transition-all text-sm ${
                     selectedCategory === 'digital'
                       ? 'bg-primary text-primary-foreground shadow-lg'
@@ -288,6 +297,7 @@ export function Shop() {
                   onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
                   className="w-16 px-2 py-1 bg-background border border-border rounded text-sm"
                   placeholder={t('shop.min')}
+                  aria-label={language === 'ar' ? 'الحد الأدنى للسعر' : 'Minimum price'}
                 />
                 <span>-</span>
                 <input
@@ -296,6 +306,7 @@ export function Shop() {
                   onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 500])}
                   className="w-16 px-2 py-1 bg-background border border-border rounded text-sm"
                   placeholder={t('shop.max')}
+                  aria-label={language === 'ar' ? 'الحد الأقصى للسعر' : 'Maximum price'}
                 />
               </div>
 
@@ -304,6 +315,7 @@ export function Shop() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="px-4 py-2 bg-muted border-2 border-transparent rounded-xl hover:border-primary transition-colors text-sm cursor-pointer"
+                aria-label={language === 'ar' ? 'ترتيب المنتجات' : 'Sort products'}
               >
                 <option value="newest">{t('shop.newest')}</option>
                 <option value="price-low">{t('shop.priceLowToHigh')}</option>
@@ -314,6 +326,7 @@ export function Shop() {
 
           {showFilters && (
             <button
+              type="button"
               onClick={() => setShowFilters(false)}
               className="lg:hidden mt-3 text-sm text-primary flex items-center gap-1"
             >

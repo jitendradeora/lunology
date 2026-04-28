@@ -31,9 +31,12 @@ export function CartDropdown() {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 hover:text-primary transition-colors"
         aria-label="Shopping cart"
+        aria-expanded={isOpen}
+        aria-controls="cart-dropdown-panel"
       >
         <ShoppingBag className="w-5 h-5" />
         {totalItems > 0 && (
@@ -51,6 +54,9 @@ export function CartDropdown() {
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             className={`fixed left-2 right-2 top-16 z-50 bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100vh-5rem)] sm:absolute sm:top-full sm:mt-2 sm:w-96 sm:max-w-[calc(100vw-2rem)] sm:max-h-none ${dropdownDesktopAlignment}`}
+            id="cart-dropdown-panel"
+            role="dialog"
+            aria-label={language === "ar" ? "سلة التسوق" : "Shopping cart"}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
@@ -62,8 +68,10 @@ export function CartDropdown() {
                 {language === "ar" ? "سلة التسوق" : "Shopping Cart"}
               </h3>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
                 className="p-1 hover:bg-muted rounded-lg transition-colors"
+                aria-label={language === "ar" ? "إغلاق السلة" : "Close cart"}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -133,6 +141,7 @@ export function CartDropdown() {
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center gap-2">
                             <button
+                              type="button"
                               onClick={() =>
                                 updateQuantity(
                                   item.id,
@@ -148,6 +157,7 @@ export function CartDropdown() {
                               {item.quantity}
                             </span>
                             <button
+                              type="button"
                               onClick={() =>
                                 updateQuantity(
                                   item.id,
@@ -166,6 +176,7 @@ export function CartDropdown() {
                               {t("common.sar")} {item.price * item.quantity}
                             </p>
                             <button
+                              type="button"
                               onClick={() =>
                                 removeFromCart(item.id, item.variants)
                               }
