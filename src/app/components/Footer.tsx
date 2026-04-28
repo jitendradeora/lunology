@@ -2,6 +2,12 @@ import { Link } from "react-router";
 import { Mail, Phone, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import visaPayIcon from "../../imports/pay/visa-card-pay.png";
+import mastercardPayIcon from "../../imports/pay/mastercard-card-pay.png";
+import madaPayIcon from "../../imports/pay/mada-card-pay.png";
+import tamaraPayIcon from "../../imports/pay/tamara-card-pay.png";
+import paypalPayIcon from "../../imports/pay/paypal-pay.png";
+import applePayIcon from "../../imports/pay/apple-card-pay.png";
 
 export function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
@@ -199,7 +205,7 @@ export function Footer() {
             {/* Visa */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/imports/pay/visa-card-pay.png"
+                src={visaPayIcon}
                 alt="Visa"
                 className="w-full h-full object-contain"
               />
@@ -208,7 +214,7 @@ export function Footer() {
             {/* Mastercard */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/imports/pay/mastercard-card-pay.png"
+                src={mastercardPayIcon}
                 alt="Mastercard"
                 className="w-full h-full object-contain"
               />
@@ -217,7 +223,7 @@ export function Footer() {
             {/* Mada */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/imports/pay/mada-card-pay.png"
+                src={madaPayIcon}
                 alt="Mada"
                 className="w-full h-full object-contain"
               />
@@ -226,7 +232,7 @@ export function Footer() {
             {/* Tamara */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/imports/pay/tamara-card-pay.png"
+                src={tamaraPayIcon}
                 alt="Tamara"
                 className="w-full h-full object-contain"
               />
@@ -235,7 +241,7 @@ export function Footer() {
             {/* Paypal */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/imports/pay/paypal-pay.png"
+                src={paypalPayIcon}
                 alt="Paypal"
                 className="w-full h-full object-contain"
               />
@@ -244,7 +250,7 @@ export function Footer() {
             {/* Apple Pay */}
             <div className="w-16 h-10 p-0 bg-white rounded-lg border border-border/50 flex items-center justify-center opacity-80 hover:opacity-100 transition-all hover:shadow-md overflow-hidden">
               <img
-                src="../src/imports/pay/apple-card-pay.png"
+                src={applePayIcon}
                 alt="Apple Pay"
                 className="w-full h-full object-contain"
               />

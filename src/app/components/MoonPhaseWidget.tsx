@@ -354,7 +354,7 @@ export function MoonPhaseWidget() {
 
         {/* Horizontal Moon Phases Scroll */}
         <div className="relative -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="overflow-x-auto pb-3 smooth-scroll">
+          <div className="overflow-x-auto overflow-y-hidden pb-3 smooth-scroll">
             <div className="flex gap-3 min-w-max w-full mx-auto justify-center pl-4 pr-4">
               {moonPhases.map((moon, index) => (
                 <motion.div
