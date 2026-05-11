@@ -1,4 +1,14 @@
 export type ShopCategory = 'physical' | 'digital' | 'biogeometry';
+import biogeometry_1 from '@/img/products/biogeometry_1.jpg';
+import biogeometry_2 from '@/img/products/biogeometry_2.jpg';
+import biogeometry_3 from '@/img/products/biogeometry_3.jpg';
+import biogeometry_4 from '@/img/products/biogeometry_4.png';
+import biogeometry_5 from '@/img/products/biogeometry_5.jpg';
+import biogeometry_6 from '@/img/products/biogeometry_6.jpg';
+import biogeometry_7 from '@/img/products/biogeometry_7.jpg';
+import biogeometry_8 from '@/img/products/biogeometry_8.png';
+import biogeometry_9 from '@/img/products/biogeometry_9.jpg';
+import biogeometry_10 from '@/img/products/biogeometry_10.png';
 
 export type CatalogProduct = {
   id: number;
@@ -205,7 +215,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
     descriptionAr:
       'BioSignatures, فرع خاص من BioGeometry, هي رسومات خطية مبنية بدقة وتحتوي على التوازن الهندسي الحيوي لأنماط الطاقة الحيوية المحددة في الأعضاء.',
     price: 449,
-    image: '/src/img/products/biogeometry_1.jpg',
+    image: biogeometry_1,
     category: 'biogeometry',
     subcategory: 'Personal',
     subcategoryAr: 'شخصي',
@@ -221,7 +231,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'يجمع “L90” البصمات الحيوية مع مبادئ التشكيل الهندسي الحيوي لإنشاء حقل من الطاقة الموازنة الطبيعية.',
     price: 519,
     image:
-      '/src/img/products/biogeometry_2.jpg',
+      biogeometry_2,
     category: 'biogeometry',
     subcategory: 'Pendants',
     subcategoryAr: 'شخصي',
@@ -237,7 +247,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'طاقم لموازنة طاقة المنزل من الإجهاد البيئي؛ يجمع البصمات الحيوية مع مبادئ التشكيل الهندسي الحيوي لإنشاء حقل من الطاقة الموازنة الطبيعية.',
     price: 1189,
     image:
-      '/src/img/products/biogeometry_3.jpg',
+      biogeometry_3,
     category: 'biogeometry',
     subcategory: 'Home',
     subcategoryAr: 'منزل',
@@ -253,7 +263,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'يساعد ملصق الزاوية 90 درجة في موازنة مستويات الطاقة العاطفية والذهنية من الإجهادات البيئية مثل المجالات الكهرومغناطيسية والإجهادات الجيوبيئية.',
     price: 129,
     image:
-      '/src/img/products/biogeometry_4.png',
+      biogeometry_4,
     category: 'biogeometry',
     subcategory: 'Stickers',
     subcategoryAr: 'ملصقات',
@@ -269,7 +279,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'يجمع الملصقات "L" البصمات الحيوية مع مبادئ التشكيل الهندسي الحيوي لإنشاء حقل من الطاقة الموازنة الطبيعية.',
     price: 49,
     image:
-      '/src/img/products/biogeometry_5.jpg',
+      biogeometry_5,
     category: 'biogeometry',
     subcategory: 'Stickers',
     subcategoryAr: 'ملصقات',
@@ -285,7 +295,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'يجمع الملصقات "L" البصمات الحيوية مع مبادئ التشكيل الهندسي الحيوي لإنشاء حقل من الطاقة الموازنة الطبيعية.',
     price: 99,
     image:
-      '/src/img/products/biogeometry_6.jpg',
+      biogeometry_6,
     category: 'biogeometry',
     subcategory: 'Stickers',
     subcategoryAr: 'ملصقات',
@@ -301,7 +311,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'يوائم الملصقات "L" البصمات الحيوية مع مبادئ التشكيل الهندسي الحيوي لإنشاء حقل من الطاقة الموازنة الطبيعية.',
     price: 89,
     image:
-      '/src/img/products/biogeometry_7.jpg',
+      biogeometry_7,
     category: 'biogeometry',
     subcategory: 'Mobile',
     subcategoryAr: 'جوال',
@@ -317,7 +327,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
       'يجمع الشريط السياري البصمات الحيوية مع الزاوية Wi-Fi L لموازنة الإجهاد الكهرومغناطيسي داخل السيارة.',
     price: 179,
     image:
-      '/src/img/products/biogeometry_8.png',
+      biogeometry_8,
     category: 'biogeometry',
     subcategory: 'Travel',
     subcategoryAr: 'سفر',
@@ -332,7 +342,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
     descriptionAr: ' يساعد الصندوق الشحن BG3 في موازنة الطاقة للجهاز أثناء الشحن.',
     price: 179,
     image:
-      '/src/img/products/biogeometry_9.jpg',
+      biogeometry_9,
     category: 'biogeometry',
     subcategory: 'Trays',
     subcategoryAr: 'شحن',
@@ -347,7 +357,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
     descriptionAr: 'في علم المعادن المصري القديم، كانت الموسيقى تستخدم للدخول في الرنين مع قوانين الخلق الشرعي.',
     price: 179,
     image:
-      '/src/img/products/biogeometry_10.png',
+      biogeometry_10,
     category: 'biogeometry',
     subcategory: 'CDs',
     subcategoryAr: 'CDs',
