@@ -172,9 +172,14 @@ export function CartDropdown() {
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <p className="text-sm">
-                              {t("common.sar")} {item.price * item.quantity}
-                            </p>
+                            <div className="text-end">
+                              <p className="text-sm">
+                                {t("common.sar")} {item.price * item.quantity}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                {language === "ar" ? "شامل الضريبة" : "Incl. VAT"}
+                              </p>
+                            </div>
                             <button
                               type="button"
                               onClick={() =>
@@ -196,16 +201,23 @@ export function CartDropdown() {
             {/* Footer */}
             {items.length > 0 && (
               <div className="p-4 border-t border-border bg-muted/30">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-muted-foreground">
-                    {language === "ar" ? "المجموع" : "Total"}
-                  </span>
-                  <span
-                    className="text-xl"
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
-                    {t("common.sar")} {totalPrice}
-                  </span>
+                <div className="flex flex-col gap-1 mb-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      {language === "ar" ? "المجموع" : "Total"}
+                    </span>
+                    <span
+                      className="text-xl"
+                      style={{ fontFamily: "var(--font-heading)" }}
+                    >
+                      {t("common.sar")} {totalPrice}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground text-end">
+                    {language === "ar"
+                      ? "شامل ضريبة القيمة المضافة ١٥٪"
+                      : "Including 15% VAT"}
+                  </p>
                 </div>
 
                 <Link

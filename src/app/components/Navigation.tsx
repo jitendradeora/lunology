@@ -487,6 +487,15 @@ export function Navigation() {
                         ? "جميع الكتب المطبوعة"
                         : "All Printed Books"}
                     </Link>
+                    <Link
+                      to="/shop/biogeometry"
+                      className="block py-3 px-4 rounded-lg hover:bg-muted transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {language === "ar"
+                        ? "متجر الهندسة الحيوية"
+                        : "BioGeometry shop"}
+                    </Link>
 
                     {/* Settings */}
                     <div className="pt-6 space-y-2 border-t border-border mt-6">

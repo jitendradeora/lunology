@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingBag, Lock, CreditCard, Package, Truck, CheckCircle, User, Mail, Phone, MapPin } from 'lucide-react';
+import { ShoppingBag, Lock, CreditCard, Package, CheckCircle, User, Mail, Phone, MapPin } from 'lucide-react';
 import { useCart } from '../CartProvider';
 import { useLanguage } from '../LanguageProvider';
+import { CHECKOUT_COUNTRIES } from '../../data/countries';
+import { CHECKOUT_SHIPPING_SAR, VAT_RATE, amountExcludingVat, roundMoney } from '../../lib/vat';
 
 type CheckoutMode = 'guest' | 'login' | 'register';
 
@@ -12,6 +14,14 @@ export function Checkout() {
   const { t, language } = useLanguage();
   const [mode, setMode] = useState<CheckoutMode>('guest');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'tamara' | 'apple'>('card');
+  const [nationalShortAddress, setNationalShortAddress] = useState('');
+  const [countryCode, setCountryCode] = useState('SA');
+  const [district, setDistrict] = useState('');
+
+  const subtotalWithoutVat = amountExcludingVat(totalPrice);
+  const vatAmount = roundMoney(totalPrice - subtotalWithoutVat);
+  const afterVatSubtotal = totalPrice;
+  const grandTotal = roundMoney(afterVatSubtotal + CHECKOUT_SHIPPING_SAR);
 
   if (items.length === 0) {
     return (
@@ -249,6 +259,67 @@ export function Checkout() {
                   />
                 </div>
 
+                <div>
+                  <label htmlFor="national-short-address" className="block text-sm mb-2">
+                    {language === 'ar' ? 'العنوان الوطني المختصر (٨ خانات)' : 'National Short Address (8 characters)'}
+                  </label>
+                  <input
+                    id="national-short-address"
+                    type="text"
+                    inputMode="text"
+                    autoComplete="off"
+                    maxLength={8}
+                    value={nationalShortAddress}
+                    onChange={(e) => {
+                      const raw = e.target.value.toUpperCase().replace(/\s/g, '');
+                      const letters = raw.slice(0, 4).replace(/[^A-Z]/g, '');
+                      const nums = raw.slice(4, 8).replace(/[^0-9]/g, '');
+                      setNationalShortAddress((letters + nums).slice(0, 8));
+                    }}
+                    placeholder={language === 'ar' ? 'مثال: ABCD1234' : 'e.g. RJDG2929'}
+                    pattern="[A-Za-z]{4}[0-9]{4}"
+                    className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors font-mono tracking-widest uppercase"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    {language === 'ar'
+                      ? '٤ أحرف إنجليزية ثم ٤ أرقام (بدون مسافات).'
+                      : '4 English letters followed by 4 digits (no spaces).'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="checkout-country" className="block text-sm mb-2">
+                      {language === 'ar' ? 'الدولة' : 'Country'}
+                    </label>
+                    <select
+                      id="checkout-country"
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                    >
+                      {CHECKOUT_COUNTRIES.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {language === 'ar' ? c.nameAr : c.nameEn}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="checkout-district" className="block text-sm mb-2">
+                      {language === 'ar' ? 'الحي / المنطقة' : 'District'}
+                    </label>
+                    <input
+                      id="checkout-district"
+                      type="text"
+                      value={district}
+                      onChange={(e) => setDistrict(e.target.value)}
+                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      placeholder={language === 'ar' ? 'اسم الحي' : 'District name'}
+                    />
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm mb-2">{language === 'ar' ? 'المدينة' : 'City'}</label>
@@ -374,24 +445,46 @@ export function Checkout() {
                       <p className="text-sm mt-1">
                         {t('common.sar')} {item.price * item.quantity}
                       </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {language === 'ar' ? 'شامل ضريبة القيمة المضافة' : 'Incl. 15% VAT'}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-border pt-4 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{language === 'ar' ? 'المجموع الفرعي' : 'Subtotal'}</span>
-                  <span>{t('common.sar')} {totalPrice}</span>
+              <div className="border-t border-border pt-4 space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">
+                    {language === 'ar' ? 'المجموع بدون ضريبة' : 'Total without VAT'}
+                  </span>
+                  <span>{t('common.sar')} {subtotalWithoutVat.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{language === 'ar' ? 'الشحن' : 'Shipping'}</span>
-                  <span className="text-green-600">{language === 'ar' ? 'مجاني' : 'Free'}</span>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">
+                    {language === 'ar' ? `ضريبة القيمة المضافة (${Math.round(VAT_RATE * 100)}٪)` : `VAT (${Math.round(VAT_RATE * 100)}%)`}
+                  </span>
+                  <span>{t('common.sar')} {vatAmount.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  <span className="text-muted-foreground">
+                    {language === 'ar' ? 'المجموع بعد الضريبة' : 'After VAT total'}
+                  </span>
+                  <span>{t('common.sar')} {afterVatSubtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{language === 'ar' ? 'تكلفة الشحن' : 'Shipping cost'}</span>
+                  <span>{t('common.sar')} {CHECKOUT_SHIPPING_SAR.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-lg pt-3 border-t border-border" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <span>{language === 'ar' ? 'المجموع' : 'Total'}</span>
-                  <span>{t('common.sar')} {totalPrice}</span>
+                  <span>{language === 'ar' ? 'الإجمالي' : 'Total'}</span>
+                  <span>{t('common.sar')} {grandTotal.toFixed(2)}</span>
                 </div>
+                <p className="text-[11px] text-muted-foreground pt-1">
+                  {language === 'ar'
+                    ? 'أسعار المنتجات المعروضة تشمل ضريبة القيمة المضافة. أعلاه تفصيل المبالغ.'
+                    : 'Product prices shown include VAT. Above is the amount breakdown.'}
+                </p>
               </div>
 
               <button type="button" className="w-full mt-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all flex items-center justify-center gap-2">

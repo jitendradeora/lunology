@@ -190,9 +190,16 @@ export function Home() {
                         ? product.descriptionAr
                         : product.description}
                     </p>
-                    <p className="text-muted-foreground">
-                      {t("common.sar")} {product.price}
-                    </p>
+                    <div className="space-y-0.5">
+                      <p className="text-muted-foreground">
+                        {t("common.sar")} {product.price}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {language === "ar"
+                          ? "شامل ضريبة القيمة المضافة"
+                          : "Incl. 15% VAT"}
+                      </p>
+                    </div>
                   </div>
                 </Link>
               </motion.div>

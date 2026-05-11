@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -9,185 +9,39 @@ import {
   X,
   ZoomIn,
   Star,
-  Package,
-  Shield,
-  RefreshCw,
 } from "lucide-react";
 import { useCart } from "../CartProvider";
 import { useLanguage } from "../LanguageProvider";
 import { SEO, generateProductSchema, generateBreadcrumbSchema } from "../SEO";
-
-const productData: Record<string, any> = {
-  "1": {
-    id: 1,
-    name: "Solar Flame",
-    price: 189,
-    rating: 4.9,
-    reviews: 84,
-    sku: "LUN-CAN-001",
-    category: "Physical Products",
-    subcategory: "Candles",
-    shortDescription:
-      "Fire Element Candle - A quiet ritual crafted from 100% pure beeswax with organic frankincense infusion.",
-    fullDescription:
-      "Solar Flame is not a candle. It is a quiet ritual. Crafted from 100% pure beeswax with a light infusion of organic frankincense, this blend burns clean, steady, and close to nature. The scent is soft, grounding, and safe for both children and pets.\n\nThe wooden wick produces a gentle crackle, bringing warmth without excess. Each burn becomes intentional. Inspired by the fire element, Solar Flame represents transformation, focus, and inner direction.\n\n290ml, 40-50 hours burn time.",
-    images: [
-      "https://cdn.salla.sa/dPjdmy/a68964a8-6cbb-4aa6-b83b-dcf18df253b1-500x500-UkE3UytRBSfA3vByMINgHc75qvZaGGF2L4UR0bcJ.jpg",
-      "https://cdn.salla.sa/dPjdmy/6d9e204f-107d-4f83-9dd0-f1af0eacc481-1000x1000-UkE3UytRBSfA3vByMINgHc75qvZaGGF2L4UR0bcJ.jpg",
-      "https://cdn.salla.sa/dPjdmy/a243c6a6-997c-4071-8851-343ece156e03-1000x1000-OkRGfiqmnLVqhMC2Via62t9YWlSMxYGmwKaaBQuY.jpg",
-    ],
-    variants: [{ type: "size", label: "Size", options: ["290ml"] }],
-    inStock: true,
-    stockCount: 15,
-    features: [
-      "100% Pure Beeswax - natural and sustainable",
-      "Organic Frankincense infusion for gentle aroma",
-      "Wooden wick with gentle crackling sound",
-      "40-50 hours of clean burning",
-      "Safe for children and pets",
-      "Fire element energy - transformation and focus",
-      "290ml premium glass container",
-      "Eco-friendly and toxin-free",
-    ],
-    specifications: {
-      Volume: "290ml",
-      "Burn Time": "40-50 hours",
-      Material: "100% Pure Beeswax",
-      Scent: "Organic Frankincense",
-      "Wick Type": "Wooden Wick",
-      Element: "Fire",
-    },
-    shipping: {
-      title: "Fast Shipping",
-      description: "Your order will be delivered wherever you are",
-      icon: Package,
-    },
-    returns: {
-      title: "14-Day Returns",
-      description: "Easy returns within 14 days of purchase",
-      icon: RefreshCw,
-    },
-    warranty: {
-      title: "Quality Guarantee",
-      description: "Authentic and high quality products",
-      icon: Shield,
-    },
-  },
-  "5": {
-    id: 5,
-    name: "Dreamology Journal 2026",
-    price: 159,
-    rating: 4.8,
-    reviews: 67,
-    sku: "LUN-JRN-005",
-    category: "Physical Products",
-    subcategory: "Journals",
-    shortDescription:
-      "Your cosmic companion for dream interpretation and self-discovery combining ancient wisdom with modern psychology.",
-    fullDescription:
-      "This comprehensive dream journal combines ancient wisdom with modern psychology. Features monthly calendars, dream tracking pages, symbol interpretation guides, and lunar phase tracking.\n\nIncludes guided prompts for deeper dream analysis and personal growth. The hardcover binding ensures durability while premium paper quality makes writing a pleasure.\n\nWhether you're exploring your subconscious or tracking patterns in your dreams, this journal provides the perfect structure for your journey of self-discovery.\n\nHardcover, 365 pages.",
-    images: [
-      "https://cdn.salla.sa/dPjdmy/CCRZObFc4mPA7MaIYvrrPstzCEn7RKhu78oaWCxr.png",
-    ],
-    variants: [
-      {
-        type: "cover",
-        label: "Cover",
-        options: ["Midnight Blue", "Celestial Purple", "Lunar Silver"],
-      },
-    ],
-    inStock: true,
-    stockCount: 28,
-    features: [
-      "365 pages for daily dream tracking",
-      "Monthly calendar spreads with lunar phases",
-      "Symbol interpretation guide section",
-      "Guided prompts for dream analysis",
-      "Personal growth reflection pages",
-      "Hardcover binding for durability",
-      "Premium quality paper",
-      "Ribbon bookmark included",
-    ],
-    specifications: {
-      Pages: "365 pages",
-      Binding: "Hardcover",
-      "Paper Quality": "Premium",
-      "Cover Options": "Midnight Blue, Celestial Purple, Lunar Silver",
-      Features: "Dream tracking, Lunar calendar, Symbol guide",
-      Year: "2026",
-    },
-  },
-  "8": {
-    id: 8,
-    name: "Digital Dream Interpretation Guide",
-    price: 79,
-    rating: 4.9,
-    reviews: 156,
-    sku: "LUN-DIG-008",
-    category: "Digital Products",
-    subcategory: "Guides",
-    shortDescription:
-      "Comprehensive digital guide to understanding your dreams with over 500 symbols and their meanings.",
-    fullDescription:
-      "This downloadable PDF includes over 500 dream symbols and their meanings, guided dream analysis worksheets, lucid dreaming techniques, and journal templates. Combines ancient wisdom with modern psychology.\n\nPerfect for anyone interested in understanding the deeper meanings of their dreams. Includes practical exercises for developing dream recall, techniques for lucid dreaming, and frameworks for personal interpretation.\n\nInstant download, 150 pages.",
-    images: [
-      "https://cdn.salla.sa/dPjdmy/CCRZObFc4mPA7MaIYvrrPstzCEn7RKhu78oaWCxr.png",
-    ],
-    variants: [],
-    inStock: true,
-    features: [
-      "Over 500 dream symbols with detailed meanings",
-      "Guided dream analysis worksheets",
-      "Lucid dreaming techniques and exercises",
-      "Printable journal templates",
-      "Ancient wisdom and modern psychology",
-      "Instant PDF download - 150 pages",
-      "Lifetime access and updates",
-      "Mobile and desktop compatible",
-    ],
-  },
-};
-
-const relatedProducts = [
-  {
-    id: 2,
-    name: "Lunar Glow",
-    price: 189,
-    image:
-      "https://cdn.salla.sa/dPjdmy/CCRZObFc4mPA7MaIYvrrPstzCEn7RKhu78oaWCxr.png",
-    rating: 4.8,
-  },
-  {
-    id: 6,
-    name: "Annual Planner 2026",
-    price: 179,
-    image:
-      "https://cdn.salla.sa/dPjdmy/CCRZObFc4mPA7MaIYvrrPstzCEn7RKhu78oaWCxr.png",
-    rating: 4.7,
-  },
-  {
-    id: 7,
-    name: "Mindfulness Journal",
-    price: 129,
-    image:
-      "https://cdn.salla.sa/dPjdmy/CCRZObFc4mPA7MaIYvrrPstzCEn7RKhu78oaWCxr.png",
-    rating: 4.9,
-  },
-  {
-    id: 11,
-    name: "Candle Care Set",
-    price: 99,
-    image:
-      "https://cdn.salla.sa/dPjdmy/CCRZObFc4mPA7MaIYvrrPstzCEn7RKhu78oaWCxr.png",
-    rating: 4.6,
-  },
-];
+import { getProductDetail, getRelatedProducts } from "../../data/productDetails";
+import { SHOP_PRODUCTS } from "../../data/catalog";
+import { NotFound } from "./NotFound";
 
 export function ProductDetail() {
   const { id } = useParams();
-  const product = productData[id || "1"] || productData["1"];
+  const product = getProductDetail(id);
   const { addToCart } = useCart();
   const { t, language } = useLanguage();
+
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
+    let list = getRelatedProducts(product.id, product.shopCategory, 4);
+    if (list.length >= 4) return list;
+    const ids = new Set(list.map((r) => r.id));
+    for (const p of SHOP_PRODUCTS) {
+      if (p.id === product.id || ids.has(p.id)) continue;
+      list.push({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        image: p.image,
+        rating: 4.6 + (p.id % 4) * 0.1,
+      });
+      ids.add(p.id);
+      if (list.length >= 4) break;
+    }
+    return list;
+  }, [product]);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -202,7 +56,15 @@ export function ProductDetail() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
+    setSelectedImage(0);
+    setSelectedVariants({});
+    setQuantity(1);
+    setActiveTab("description");
   }, [id]);
+
+  if (!product) {
+    return <NotFound />;
+  }
 
   const discount = product.originalPrice
     ? Math.round(
@@ -224,6 +86,7 @@ export function ProductDetail() {
     addToCart({
       id: product.id,
       name: product.name,
+      nameAr: product.nameAr,
       price: product.price,
       image: product.images[0],
       variants: hasVariants ? selectedVariants : undefined,
@@ -238,7 +101,10 @@ export function ProductDetail() {
   const breadcrumbs = [
     { name: "Home", url: "/" },
     { name: "Shop", url: "/shop" },
-    { name: product.category, url: `/shop/${product.category.toLowerCase()}` },
+    {
+      name: product.categoryName,
+      url: `/shop/${product.shopCategory}`,
+    },
     { name: product.name, url: `/product/${product.id}` },
   ];
 
@@ -260,7 +126,7 @@ export function ProductDetail() {
       <SEO
         title={`${product.name} - Lunology | ${product.shortDescription}`}
         description={product.fullDescription}
-        keywords={`${product.name}, ${product.category}, ${product.subcategory}, Lunology, spiritual products, cosmic wisdom`}
+        keywords={`${product.name}, ${product.categoryName}, ${product.subcategory}, Lunology, spiritual products, cosmic wisdom`}
         image={product.images[0]}
         type="product"
         schema={combinedSchema}
@@ -291,11 +157,11 @@ export function ProductDetail() {
         <section className="py-8 md:py-12 px-4">
           <div className="max-w-7xl mx-auto">
             <Link
-              to="/shop"
+              to={`/shop/${product.shopCategory}`}
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors group"
             >
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Back to Shop
+              {language === "ar" ? "العودة للمتجر" : "Back to Shop"}
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -309,7 +175,11 @@ export function ProductDetail() {
                 >
                   <img
                     src={product.images[selectedImage]}
-                    alt={product.name}
+                    alt={
+                      language === "ar"
+                        ? product.nameAr || product.name
+                        : product.name
+                    }
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
@@ -351,13 +221,17 @@ export function ProductDetail() {
               <div className="lg:sticky lg:top-24 lg:self-start space-y-6">
                 <div>
                   <p className="text-xs text-primary tracking-wider uppercase mb-2">
-                    {product.subcategory}
+                    {language === "ar"
+                      ? product.subcategoryAr || product.subcategory
+                      : product.subcategory}
                   </p>
                   <h1
                     className="text-3xl md:text-4xl lg:text-5xl mb-3"
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
-                    {product.name}
+                    {language === "ar"
+                      ? product.nameAr || product.name
+                      : product.name}
                   </h1>
 
                   {/* Rating */}
@@ -382,18 +256,25 @@ export function ProductDetail() {
                   )}
 
                   {/* Price */}
-                  <div className="flex items-baseline gap-3 mb-4">
-                    <p
-                      className="text-4xl"
-                      style={{ fontFamily: "var(--font-heading)" }}
-                    >
-                      SAR {product.price}
-                    </p>
-                    {product.originalPrice && (
-                      <p className="text-2xl text-muted-foreground line-through">
-                        SAR {product.originalPrice}
+                  <div className="flex flex-col gap-1 mb-4">
+                    <div className="flex items-baseline gap-3">
+                      <p
+                        className="text-4xl"
+                        style={{ fontFamily: "var(--font-heading)" }}
+                      >
+                        {t("common.sar")} {product.price}
                       </p>
-                    )}
+                      {product.originalPrice && (
+                        <p className="text-2xl text-muted-foreground line-through">
+                          {t("common.sar")} {product.originalPrice}
+                        </p>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {language === "ar"
+                        ? "شامل ضريبة القيمة المضافة (١٥٪)"
+                        : "Including 15% VAT"}
+                    </p>
                   </div>
 
                   {/* Stock Status */}
@@ -730,7 +611,14 @@ export function ProductDetail() {
                           className="text-sm md:text-base"
                           style={{ fontFamily: "var(--font-heading)" }}
                         >
-                          {relatedProduct.name}
+                          {(() => {
+                            const row = SHOP_PRODUCTS.find(
+                              (p) => p.id === relatedProduct.id,
+                            );
+                            return language === "ar" && row
+                              ? row.nameAr
+                              : relatedProduct.name;
+                          })()}
                         </h3>
 
                         <div className="flex items-center gap-2">
@@ -748,7 +636,12 @@ export function ProductDetail() {
                           </div>
                         </div>
                         <p className="text-sm md:text-base text-muted-foreground">
-                          SAR {relatedProduct.price}
+                          {t("common.sar")} {relatedProduct.price}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {language === "ar"
+                            ? "شامل ضريبة القيمة المضافة"
+                            : "Incl. VAT"}
                         </p>
                       </div>
                     </Link>
