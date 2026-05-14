@@ -241,6 +241,7 @@ export function Contact() {
                       setSubject(e.target.value);
                       clear("subject");
                     }}
+                    autoComplete="off"
                     aria-invalid={Boolean(errors.subject)}
                     className={`w-full px-4 py-3 bg-input-background border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-shadow ${inputBorderClass(Boolean(errors.subject))}`}
                     placeholder="How can we help?"
@@ -264,6 +265,7 @@ export function Contact() {
                       setMessage(e.target.value);
                       clear("message");
                     }}
+                    autoComplete="off"
                     aria-invalid={Boolean(errors.message)}
                     className={`w-full px-4 py-3 bg-input-background border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-shadow resize-none ${inputBorderClass(Boolean(errors.message))}`}
                     placeholder="Your message..."

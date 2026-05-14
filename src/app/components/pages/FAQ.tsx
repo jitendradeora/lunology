@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import {
@@ -117,6 +118,7 @@ export function FAQ() {
                 className="border border-border rounded-lg overflow-hidden bg-card/20"
               >
                 <button
+                  type="button"
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
                   className="w-full flex items-center justify-between p-6 text-left hover:bg-muted/30 transition-colors"
                 >
@@ -162,12 +164,12 @@ export function FAQ() {
             <p className="text-muted-foreground mb-6">
               We're here to help. Reach out to us and we'll get back to you as soon as possible.
             </p>
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="inline-block px-8 py-3 bg-primary text-primary-foreground rounded-full hover:shadow-lg hover:shadow-primary/20 transition-all"
             >
               Contact Us
-            </a>
+            </Link>
           </motion.div>
         </div>
       </section>

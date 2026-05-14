@@ -6,7 +6,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /checkout/
-Disallow: /*.json$
+Disallow: /order-confirmation/
 
 # Allow important pages
 Allow: /product/
