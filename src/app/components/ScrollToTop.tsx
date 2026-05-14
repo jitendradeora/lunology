@@ -1,6 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
+import { useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUp } from 'lucide-react';
+
+/** Restores window scroll to top on in-app navigation (SPA links do not reload the page). */
+export function ScrollWindowOnRouteChange() {
+  const { pathname, search } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname, search]);
+
+  return null;
+}
 
 export function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
