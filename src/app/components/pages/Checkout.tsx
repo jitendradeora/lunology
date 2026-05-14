@@ -1,22 +1,39 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingBag, Lock, CreditCard, Package, CheckCircle, User, Mail, Phone, MapPin } from 'lucide-react';
-import { useCart } from '../CartProvider';
-import { useLanguage } from '../LanguageProvider';
-import { CHECKOUT_COUNTRIES } from '../../data/countries';
-import { CHECKOUT_SHIPPING_SAR, VAT_RATE, amountExcludingVat, roundMoney } from '../../lib/vat';
+import { useState } from "react";
+import { Link } from "react-router";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  ShoppingBag,
+  Lock,
+  CreditCard,
+  Package,
+  CheckCircle,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
+import { useCart } from "../CartProvider";
+import { useLanguage } from "../LanguageProvider";
+import { CHECKOUT_COUNTRIES } from "../../data/countries";
+import {
+  CHECKOUT_SHIPPING_SAR,
+  VAT_RATE,
+  amountExcludingVat,
+  roundMoney,
+} from "../../lib/vat";
 
-type CheckoutMode = 'guest' | 'login' | 'register';
+type CheckoutMode = "guest" | "login" | "register";
 
 export function Checkout() {
   const { items, totalPrice } = useCart();
   const { t, language } = useLanguage();
-  const [mode, setMode] = useState<CheckoutMode>('guest');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'tamara' | 'apple'>('card');
-  const [nationalShortAddress, setNationalShortAddress] = useState('');
-  const [countryCode, setCountryCode] = useState('SA');
-  const [district, setDistrict] = useState('');
+  const [mode, setMode] = useState<CheckoutMode>("guest");
+  const [paymentMethod, setPaymentMethod] = useState<
+    "card" | "tamara" | "apple"
+  >("card");
+  const [nationalShortAddress, setNationalShortAddress] = useState("");
+  const [countryCode, setCountryCode] = useState("SA");
+  const [district, setDistrict] = useState("");
 
   const subtotalWithoutVat = amountExcludingVat(totalPrice);
   const vatAmount = roundMoney(totalPrice - subtotalWithoutVat);
@@ -28,17 +45,22 @@ export function Checkout() {
       <div className="pt-20 min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-          <h2 className="text-2xl mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-            {language === 'ar' ? 'سلتك فارغة' : 'Your cart is empty'}
+          <h2
+            className="text-2xl mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {language === "ar" ? "سلتك فارغة" : "Your cart is empty"}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {language === 'ar' ? 'أضف بعض المنتجات للمتابعة إلى الدفع' : 'Add some products to proceed to checkout'}
+            {language === "ar"
+              ? "أضف بعض المنتجات للمتابعة إلى الدفع"
+              : "Add some products to proceed to checkout"}
           </p>
           <Link
             to="/shop"
             className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
           >
-            {language === 'ar' ? 'تسوق الآن' : 'Shop Now'}
+            {language === "ar" ? "تسوق الآن" : "Shop Now"}
           </Link>
         </div>
       </div>
@@ -48,13 +70,24 @@ export function Checkout() {
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-b from-muted/20 to-background">
       {/* Header */}
-      <section className="py-12 px-4 border-b border-border" style={{ backgroundColor: 'var(--banner-bg)', color: 'var(--banner-foreground)' }}>
+      <section
+        className="py-12 px-4 border-b border-border"
+        style={{
+          backgroundColor: "var(--banner-bg)",
+          color: "var(--banner-foreground)",
+        }}
+      >
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-4xl mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-            {language === 'ar' ? 'إتمام الطلب' : 'Checkout'}
+          <h1
+            className="text-3xl md:text-4xl mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {language === "ar" ? "إتمام الطلب" : "Checkout"}
           </h1>
           <p className="opacity-90">
-            {language === 'ar' ? 'أكمل طلبك بشكل آمن' : 'Complete your order securely'}
+            {language === "ar"
+              ? "أكمل طلبك بشكل آمن"
+              : "Complete your order securely"}
           </p>
         </div>
       </section>
@@ -65,48 +98,51 @@ export function Checkout() {
           <div className="lg:col-span-2 space-y-6">
             {/* Authentication Toggle */}
             <div className="bg-card rounded-2xl border border-border p-6">
-              <h2 className="text-xl mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-                {language === 'ar' ? 'معلومات الحساب' : 'Account Information'}
+              <h2
+                className="text-xl mb-4"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                {language === "ar" ? "معلومات الحساب" : "Account Information"}
               </h2>
 
               <div className="flex gap-2 mb-6">
                 <button
                   type="button"
-                  onClick={() => setMode('guest')}
+                  onClick={() => setMode("guest")}
                   className={`flex-1 px-4 py-3 rounded-xl transition-all ${
-                    mode === 'guest'
-                      ? 'bg-primary text-primary-foreground shadow-lg'
-                      : 'bg-muted hover:bg-muted/80'
+                    mode === "guest"
+                      ? "bg-primary text-primary-foreground shadow-lg"
+                      : "bg-muted hover:bg-muted/80"
                   }`}
                 >
-                  {language === 'ar' ? 'ضيف' : 'Guest'}
+                  {language === "ar" ? "ضيف" : "Guest"}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setMode('login')}
+                  onClick={() => setMode("login")}
                   className={`flex-1 px-4 py-3 rounded-xl transition-all ${
-                    mode === 'login'
-                      ? 'bg-primary text-primary-foreground shadow-lg'
-                      : 'bg-muted hover:bg-muted/80'
+                    mode === "login"
+                      ? "bg-primary text-primary-foreground shadow-lg"
+                      : "bg-muted hover:bg-muted/80"
                   }`}
                 >
-                  {language === 'ar' ? 'تسجيل دخول' : 'Login'}
+                  {language === "ar" ? "تسجيل دخول" : "Login"}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setMode('register')}
+                  onClick={() => setMode("register")}
                   className={`flex-1 px-4 py-3 rounded-xl transition-all ${
-                    mode === 'register'
-                      ? 'bg-primary text-primary-foreground shadow-lg'
-                      : 'bg-muted hover:bg-muted/80'
+                    mode === "register"
+                      ? "bg-primary text-primary-foreground shadow-lg"
+                      : "bg-muted hover:bg-muted/80"
                   }`}
                 >
-                  {language === 'ar' ? 'تسجيل جديد' : 'Register'}
+                  {language === "ar" ? "تسجيل جديد" : "Register"}
                 </button>
               </div>
 
               <AnimatePresence mode="wait">
-                {mode === 'login' && (
+                {mode === "login" && (
                   <motion.div
                     key="login"
                     initial={{ opacity: 0, y: 10 }}
@@ -115,17 +151,31 @@ export function Checkout() {
                     className="space-y-4"
                   >
                     <div>
-                      <label htmlFor="login-email" className="block text-sm mb-2">{language === 'ar' ? 'البريد الإلكتروني' : 'Email'}</label>
+                      <label
+                        htmlFor="login-email"
+                        className="block text-sm mb-2"
+                      >
+                        {language === "ar" ? "البريد الإلكتروني" : "Email"}
+                      </label>
                       <input
                         type="email"
                         id="login-email"
                         className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder={language === 'ar' ? 'بريدك@الإلكتروني.com' : 'your@email.com'}
+                        placeholder={
+                          language === "ar"
+                            ? "بريدك@الإلكتروني.com"
+                            : "your@email.com"
+                        }
                         autoComplete="email"
                       />
                     </div>
                     <div>
-                      <label htmlFor="login-password" className="block text-sm mb-2">{language === 'ar' ? 'كلمة المرور' : 'Password'}</label>
+                      <label
+                        htmlFor="login-password"
+                        className="block text-sm mb-2"
+                      >
+                        {language === "ar" ? "كلمة المرور" : "Password"}
+                      </label>
                       <input
                         type="password"
                         id="login-password"
@@ -134,13 +184,16 @@ export function Checkout() {
                         autoComplete="current-password"
                       />
                     </div>
-                    <button type="submit" className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all">
-                      {language === 'ar' ? 'تسجيل الدخول' : 'Sign In'}
+                    <button
+                      type="submit"
+                      className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
+                    >
+                      {language === "ar" ? "تسجيل الدخول" : "Sign In"}
                     </button>
                   </motion.div>
                 )}
 
-                {mode === 'register' && (
+                {mode === "register" && (
                   <motion.div
                     key="register"
                     initial={{ opacity: 0, y: 10 }}
@@ -149,27 +202,48 @@ export function Checkout() {
                     className="space-y-4"
                   >
                     <div>
-                      <label htmlFor="register-name" className="block text-sm mb-2">{language === 'ar' ? 'الاسم الكامل' : 'Full Name'}</label>
+                      <label
+                        htmlFor="register-name"
+                        className="block text-sm mb-2"
+                      >
+                        {language === "ar" ? "الاسم الكامل" : "Full Name"}
+                      </label>
                       <input
                         type="text"
                         id="register-name"
                         className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder={language === 'ar' ? 'اسمك الكامل' : 'Your full name'}
+                        placeholder={
+                          language === "ar" ? "اسمك الكامل" : "Your full name"
+                        }
                         autoComplete="name"
                       />
                     </div>
                     <div>
-                      <label htmlFor="register-email" className="block text-sm mb-2">{language === 'ar' ? 'البريد الإلكتروني' : 'Email'}</label>
+                      <label
+                        htmlFor="register-email"
+                        className="block text-sm mb-2"
+                      >
+                        {language === "ar" ? "البريد الإلكتروني" : "Email"}
+                      </label>
                       <input
                         type="email"
                         id="register-email"
                         className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder={language === 'ar' ? 'بريدك@الإلكتروني.com' : 'your@email.com'}
+                        placeholder={
+                          language === "ar"
+                            ? "بريدك@الإلكتروني.com"
+                            : "your@email.com"
+                        }
                         autoComplete="email"
                       />
                     </div>
                     <div>
-                      <label htmlFor="register-password" className="block text-sm mb-2">{language === 'ar' ? 'كلمة المرور' : 'Password'}</label>
+                      <label
+                        htmlFor="register-password"
+                        className="block text-sm mb-2"
+                      >
+                        {language === "ar" ? "كلمة المرور" : "Password"}
+                      </label>
                       <input
                         type="password"
                         id="register-password"
@@ -178,13 +252,16 @@ export function Checkout() {
                         autoComplete="new-password"
                       />
                     </div>
-                    <button type="submit" className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all">
-                      {language === 'ar' ? 'إنشاء حساب' : 'Create Account'}
+                    <button
+                      type="submit"
+                      className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
+                    >
+                      {language === "ar" ? "إنشاء حساب" : "Create Account"}
                     </button>
                   </motion.div>
                 )}
 
-                {mode === 'guest' && (
+                {mode === "guest" && (
                   <motion.div
                     key="guest"
                     initial={{ opacity: 0, y: 10 }}
@@ -192,7 +269,9 @@ export function Checkout() {
                     exit={{ opacity: 0, y: -10 }}
                     className="text-center py-4 text-muted-foreground"
                   >
-                    {language === 'ar' ? 'المتابعة كضيف - لا حاجة لحساب' : 'Continue as guest - No account needed'}
+                    {language === "ar"
+                      ? "المتابعة كضيف - لا حاجة لحساب"
+                      : "Continue as guest - No account needed"}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -200,9 +279,14 @@ export function Checkout() {
 
             {/* Billing Information */}
             <div className="bg-card rounded-2xl border border-border p-6">
-              <h2 className="text-xl mb-4 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2
+                className="text-xl mb-4 flex items-center gap-2"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
                 <MapPin className="w-5 h-5 text-primary" />
-                {language === 'ar' ? 'معلومات الفواتير والشحن' : 'Billing & Shipping Information'}
+                {language === "ar"
+                  ? "معلومات الفواتير والشحن"
+                  : "Billing & Shipping Information"}
               </h2>
 
               <div className="space-y-4">
@@ -210,7 +294,7 @@ export function Checkout() {
                   <div>
                     <label className="block text-sm mb-2">
                       <User className="w-4 h-4 inline-block mr-1" />
-                      {language === 'ar' ? 'الاسم الأول' : 'First Name'}
+                      {language === "ar" ? "الاسم الأول" : "First Name"}
                     </label>
                     <input
                       type="text"
@@ -220,7 +304,7 @@ export function Checkout() {
                   <div>
                     <label className="block text-sm mb-2">
                       <User className="w-4 h-4 inline-block mr-1" />
-                      {language === 'ar' ? 'اسم العائلة' : 'Last Name'}
+                      {language === "ar" ? "اسم العائلة" : "Last Name"}
                     </label>
                     <input
                       type="text"
@@ -232,7 +316,7 @@ export function Checkout() {
                 <div>
                   <label className="block text-sm mb-2">
                     <Mail className="w-4 h-4 inline-block mr-1" />
-                    {language === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}
+                    {language === "ar" ? "البريد الإلكتروني" : "Email Address"}
                   </label>
                   <input
                     type="email"
@@ -243,7 +327,7 @@ export function Checkout() {
                 <div>
                   <label className="block text-sm mb-2">
                     <Phone className="w-4 h-4 inline-block mr-1" />
-                    {language === 'ar' ? 'رقم الهاتف' : 'Phone Number'}
+                    {language === "ar" ? "رقم الهاتف" : "Phone Number"}
                   </label>
                   <input
                     type="tel"
@@ -252,7 +336,9 @@ export function Checkout() {
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-2">{language === 'ar' ? 'العنوان' : 'Street Address'}</label>
+                  <label className="block text-sm mb-2">
+                    {language === "ar" ? "العنوان" : "Street Address"}
+                  </label>
                   <input
                     type="text"
                     className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
@@ -260,8 +346,13 @@ export function Checkout() {
                 </div>
 
                 <div>
-                  <label htmlFor="national-short-address" className="block text-sm mb-2">
-                    {language === 'ar' ? 'العنوان الوطني المختصر (٨ خانات)' : 'National Short Address (8 characters)'}
+                  <label
+                    htmlFor="national-short-address"
+                    className="block text-sm mb-2"
+                  >
+                    {language === "ar"
+                      ? "العنوان الوطني المختصر (٨ خانات)"
+                      : "National Short Address (8 characters)"}
                   </label>
                   <input
                     id="national-short-address"
@@ -271,26 +362,33 @@ export function Checkout() {
                     maxLength={8}
                     value={nationalShortAddress}
                     onChange={(e) => {
-                      const raw = e.target.value.toUpperCase().replace(/\s/g, '');
-                      const letters = raw.slice(0, 4).replace(/[^A-Z]/g, '');
-                      const nums = raw.slice(4, 8).replace(/[^0-9]/g, '');
+                      const raw = e.target.value
+                        .toUpperCase()
+                        .replace(/\s/g, "");
+                      const letters = raw.slice(0, 4).replace(/[^A-Z]/g, "");
+                      const nums = raw.slice(4, 8).replace(/[^0-9]/g, "");
                       setNationalShortAddress((letters + nums).slice(0, 8));
                     }}
-                    placeholder={language === 'ar' ? 'مثال: ABCD1234' : 'e.g. RJDG2929'}
+                    placeholder={
+                      language === "ar" ? "مثال: ABCD1234" : "e.g. RJDG2929"
+                    }
                     pattern="[A-Za-z]{4}[0-9]{4}"
                     className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors font-mono tracking-widest uppercase"
                   />
                   <p className="text-xs text-muted-foreground mt-1.5">
-                    {language === 'ar'
-                      ? '٤ أحرف إنجليزية ثم ٤ أرقام (بدون مسافات).'
-                      : '4 English letters followed by 4 digits (no spaces).'}
+                    {language === "ar"
+                      ? "٤ أحرف إنجليزية ثم ٤ أرقام (بدون مسافات)."
+                      : "4 English letters followed by 4 digits (no spaces)."}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="checkout-country" className="block text-sm mb-2">
-                      {language === 'ar' ? 'الدولة' : 'Country'}
+                    <label
+                      htmlFor="checkout-country"
+                      className="block text-sm mb-2"
+                    >
+                      {language === "ar" ? "الدولة" : "Country"}
                     </label>
                     <select
                       id="checkout-country"
@@ -300,14 +398,17 @@ export function Checkout() {
                     >
                       {CHECKOUT_COUNTRIES.map((c) => (
                         <option key={c.code} value={c.code}>
-                          {language === 'ar' ? c.nameAr : c.nameEn}
+                          {language === "ar" ? c.nameAr : c.nameEn}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="checkout-district" className="block text-sm mb-2">
-                      {language === 'ar' ? 'الحي / المنطقة' : 'District'}
+                    <label
+                      htmlFor="checkout-district"
+                      className="block text-sm mb-2"
+                    >
+                      {language === "ar" ? "الحي / المنطقة" : "District"}
                     </label>
                     <input
                       id="checkout-district"
@@ -315,28 +416,36 @@ export function Checkout() {
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
                       className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                      placeholder={language === 'ar' ? 'اسم الحي' : 'District name'}
+                      placeholder={
+                        language === "ar" ? "اسم الحي" : "District name"
+                      }
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm mb-2">{language === 'ar' ? 'المدينة' : 'City'}</label>
+                    <label className="block text-sm mb-2">
+                      {language === "ar" ? "المدينة" : "City"}
+                    </label>
                     <input
                       type="text"
                       className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm mb-2">{language === 'ar' ? 'المنطقة' : 'State/Province'}</label>
+                    <label className="block text-sm mb-2">
+                      {language === "ar" ? "المنطقة" : "State/Province"}
+                    </label>
                     <input
                       type="text"
                       className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm mb-2">{language === 'ar' ? 'الرمز البريدي' : 'Postal Code'}</label>
+                    <label className="block text-sm mb-2">
+                      {language === "ar" ? "الرمز البريدي" : "Postal Code"}
+                    </label>
                     <input
                       type="text"
                       className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
@@ -348,63 +457,94 @@ export function Checkout() {
 
             {/* Payment Method */}
             <div className="bg-card rounded-2xl border border-border p-6">
-              <h2 className="text-xl mb-4 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2
+                className="text-xl mb-4 flex items-center gap-2"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
                 <CreditCard className="w-5 h-5 text-primary" />
-                {language === 'ar' ? 'طريقة الدفع' : 'Payment Method'}
+                {language === "ar" ? "طريقة الدفع" : "Payment Method"}
               </h2>
 
-              <div className="space-y-3" role="radiogroup" aria-label={language === 'ar' ? 'اختيار طريقة الدفع' : 'Choose payment method'}>
+              <div
+                className="space-y-3"
+                role="radiogroup"
+                aria-label={
+                  language === "ar"
+                    ? "اختيار طريقة الدفع"
+                    : "Choose payment method"
+                }
+              >
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod('card')}
+                  onClick={() => setPaymentMethod("card")}
                   className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
-                    paymentMethod === 'card'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50'
+                    paymentMethod === "card"
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50"
                   }`}
                   role="radio"
-                  aria-checked={paymentMethod === 'card'}
+                  aria-checked={paymentMethod === "card"}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <CreditCard className="w-5 h-5" />
-                      <span>{language === 'ar' ? 'بطاقة ائتمان/مدى' : 'Credit/Debit Card'}</span>
+                      <span>
+                        {language === "ar"
+                          ? "بطاقة ائتمان/مدى"
+                          : "Credit/Debit Card"}
+                      </span>
                     </div>
                     <div className="flex gap-3 items-center">
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-5" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-5" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Mada_Logo.svg/512px-Mada_Logo.svg.png" alt="Mada" className="h-5" />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
+                        alt="Visa"
+                        className="h-5"
+                      />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                        alt="Mastercard"
+                        className="h-5"
+                      />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Mada_Logo.svg/512px-Mada_Logo.svg.png"
+                        alt="Mada"
+                        className="h-5"
+                      />
                     </div>
                   </div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod('tamara')}
+                  onClick={() => setPaymentMethod("tamara")}
                   className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
-                    paymentMethod === 'tamara'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50'
+                    paymentMethod === "tamara"
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50"
                   }`}
                   role="radio"
-                  aria-checked={paymentMethod === 'tamara'}
+                  aria-checked={paymentMethod === "tamara"}
                 >
                   <div className="flex items-center gap-3">
                     <Package className="w-5 h-5" />
-                    <span>{language === 'ar' ? 'تمارا - قسط على 4 دفعات' : 'Tamara - Split in 4'}</span>
+                    <span>
+                      {language === "ar"
+                        ? "تمارا - قسط على 4 دفعات"
+                        : "Tamara - Split in 4"}
+                    </span>
                   </div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod('apple')}
+                  onClick={() => setPaymentMethod("apple")}
                   className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
-                    paymentMethod === 'apple'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50'
+                    paymentMethod === "apple"
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50"
                   }`}
                   role="radio"
-                  aria-checked={paymentMethod === 'apple'}
+                  aria-checked={paymentMethod === "apple"}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xl">🍎</span>
@@ -417,7 +557,11 @@ export function Checkout() {
               <div className="mt-6 pt-6 border-t border-border">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Lock className="w-4 h-4 text-green-600" />
-                  <span>{language === 'ar' ? 'دفع آمن ومشفر' : 'Secure encrypted payment'}</span>
+                  <span>
+                    {language === "ar"
+                      ? "دفع آمن ومشفر"
+                      : "Secure encrypted payment"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -426,27 +570,43 @@ export function Checkout() {
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-card rounded-2xl border border-border p-6 sticky top-24">
-              <h2 className="text-xl mb-4 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2
+                className="text-xl mb-4 flex items-center gap-2"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
                 <ShoppingBag className="w-5 h-5 text-primary" />
-                {language === 'ar' ? 'ملخص الطلب' : 'Order Summary'}
+                {language === "ar" ? "ملخص الطلب" : "Order Summary"}
               </h2>
 
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
-                  <div key={`${item.id}-${JSON.stringify(item.variants)}`} className="flex gap-3">
+                  <div
+                    key={`${item.id}-${JSON.stringify(item.variants)}`}
+                    className="flex gap-3"
+                  >
                     <div className="w-16 h-16 rounded-lg overflow-hidden bg-muted shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm truncate mb-1">{language === 'ar' ? item.nameAr || item.name : item.name}</h4>
+                      <h4 className="text-sm truncate mb-1">
+                        {language === "ar"
+                          ? item.nameAr || item.name
+                          : item.name}
+                      </h4>
                       <p className="text-xs text-muted-foreground">
-                        {language === 'ar' ? 'الكمية' : 'Qty'}: {item.quantity}
+                        {language === "ar" ? "الكمية" : "Qty"}: {item.quantity}
                       </p>
                       <p className="text-sm mt-1">
-                        {t('common.sar')} {item.price * item.quantity}
+                        {t("common.sar")} {item.price * item.quantity}
                       </p>
                       <p className="text-[10px] text-muted-foreground">
-                        {language === 'ar' ? 'شامل ضريبة القيمة المضافة' : 'Incl. 15% VAT'}
+                        {language === "ar"
+                          ? "شامل ضريبة القيمة المضافة"
+                          : "Incl. 15% VAT"}
                       </p>
                     </div>
                   </div>
@@ -456,46 +616,70 @@ export function Checkout() {
               <div className="border-t border-border pt-4 space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">
-                    {language === 'ar' ? 'المجموع بدون ضريبة' : 'Total without VAT'}
+                    {language === "ar"
+                      ? "المجموع بدون ضريبة"
+                      : "Total without VAT"}
                   </span>
-                  <span>{t('common.sar')} {subtotalWithoutVat.toFixed(2)}</span>
+                  <span>
+                    {t("common.sar")} {subtotalWithoutVat.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">
-                    {language === 'ar' ? `ضريبة القيمة المضافة (${Math.round(VAT_RATE * 100)}٪)` : `VAT (${Math.round(VAT_RATE * 100)}%)`}
+                    {language === "ar"
+                      ? `ضريبة القيمة المضافة (${Math.round(VAT_RATE * 100)}٪)`
+                      : `VAT (${Math.round(VAT_RATE * 100)}%)`}
                   </span>
-                  <span>{t('common.sar')} {vatAmount.toFixed(2)}</span>
+                  <span>
+                    {t("common.sar")} {vatAmount.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between font-medium">
                   <span className="text-muted-foreground">
-                    {language === 'ar' ? 'المجموع بعد الضريبة' : 'After VAT total'}
+                    {language === "ar"
+                      ? "المجموع بعد الضريبة"
+                      : "After VAT total"}
                   </span>
-                  <span>{t('common.sar')} {afterVatSubtotal.toFixed(2)}</span>
+                  <span>
+                    {t("common.sar")} {afterVatSubtotal.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{language === 'ar' ? 'تكلفة الشحن' : 'Shipping cost'}</span>
-                  <span>{t('common.sar')} {CHECKOUT_SHIPPING_SAR.toFixed(2)}</span>
+                  <span className="text-muted-foreground">
+                    {language === "ar" ? "تكلفة الشحن" : "Shipping cost"}
+                  </span>
+                  <span>
+                    {t("common.sar")} {CHECKOUT_SHIPPING_SAR.toFixed(2)}
+                  </span>
                 </div>
-                <div className="flex justify-between text-lg pt-3 border-t border-border" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <span>{language === 'ar' ? 'الإجمالي' : 'Total'}</span>
-                  <span>{t('common.sar')} {grandTotal.toFixed(2)}</span>
+                <div
+                  className="flex justify-between text-lg pt-3 border-t border-border"
+                  style={{ fontFamily: "var(--font-heading)" }}
+                >
+                  <span>{language === "ar" ? "الإجمالي" : "Total"}</span>
+                  <span>
+                    {t("common.sar")} {grandTotal.toFixed(2)}
+                  </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground pt-1">
-                  {language === 'ar'
-                    ? 'أسعار المنتجات المعروضة تشمل ضريبة القيمة المضافة. أعلاه تفصيل المبالغ.'
-                    : 'Product prices shown include VAT. Above is the amount breakdown.'}
+                  {language === "ar"
+                    ? "أسعار المنتجات المعروضة تشمل ضريبة القيمة المضافة. أعلاه تفصيل المبالغ."
+                    : "Product prices shown include VAT. Above is the amount breakdown."}
                 </p>
               </div>
 
-              <button type="button" className="w-full mt-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all flex items-center justify-center gap-2">
+              <button
+                type="button"
+                className="w-full mt-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all flex items-center justify-center gap-2"
+              >
                 <CheckCircle className="w-5 h-5" />
-                {language === 'ar' ? 'تأكيد الطلب' : 'Place Order'}
+                {language === "ar" ? "تأكيد الطلب" : "Place Order"}
               </button>
 
               <p className="text-xs text-center text-muted-foreground mt-4">
-                {language === 'ar'
+                {language === "ar"
                   ? 'بالنقر على "تأكيد الطلب"، فإنك توافق على شروطنا وأحكامنا'
-                  : 'By placing your order, you agree to our terms and conditions'}
+                  : "By placing your order, you agree to our terms and conditions"}
               </p>
             </div>
           </div>

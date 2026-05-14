@@ -311,7 +311,7 @@ export function ProductDetail() {
                 {/* Variants */}
                 {product.variants?.map((variant: any) => (
                   <div key={variant.type}>
-                    <h3 className="mb-3 text-sm tracking-wider uppercase text-secondary">
+                    <h3 className="mb-3 text-sm tracking-wider uppercase text-primary text-muted-foreground">
                       {variant.label || variant.type}
                     </h3>
                     <div className="flex flex-wrap gap-3">
@@ -325,7 +325,7 @@ export function ProductDetail() {
                               [variant.type]: option,
                             })
                           }
-                          className={`px-5 py-2.5 border-2 rounded-xl transition-all ${
+                          className={`cursor-pointer px-5 py-2.5 border-2 rounded-xl transition-all ${
                             selectedVariants[variant.type] === option
                               ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                               : "border-border hover:border-primary hover:bg-muted"
@@ -340,14 +340,14 @@ export function ProductDetail() {
 
                 {/* Quantity */}
                 <div>
-                  <h3 className="mb-3 text-sm tracking-wider uppercase text-secondary">
+                  <h3 className="mb-3 text-sm tracking-wider uppercase text-primary text-muted-foreground">
                     Quantity
                   </h3>
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-12 h-12 border-2 border-border rounded-xl hover:border-primary hover:bg-muted transition-colors"
+                      className="cursor-pointer w-12 h-12 border-2 border-border rounded-xl hover:border-primary hover:bg-muted transition-colors"
                     >
                       -
                     </button>
@@ -355,7 +355,7 @@ export function ProductDetail() {
                     <button
                       type="button"
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-12 h-12 border-2 border-border rounded-xl hover:border-primary hover:bg-muted transition-colors"
+                      className="cursor-pointer w-12 h-12 border-2 border-border rounded-xl hover:border-primary hover:bg-muted transition-colors"
                     >
                       +
                     </button>
@@ -367,7 +367,7 @@ export function ProductDetail() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     disabled={
                       !product.inStock || (hasVariants && !allVariantsSelected)
                     }
@@ -395,7 +395,7 @@ export function ProductDetail() {
                     aria-label="Add to favorites"
                   >
                     <Heart
-                      className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`}
+                      className={`cursor-pointer w-5 h-5 ${isFavorite ? "fill-current" : ""}`}
                     />
                   </button>
                 </div>

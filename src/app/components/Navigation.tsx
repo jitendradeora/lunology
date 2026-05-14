@@ -361,7 +361,7 @@ export function Navigation() {
             <button
               type="button"
               onClick={() => setLanguage(language === "en" ? "ar" : "en")}
-              className="flex items-center gap-1 p-2 hover:text-primary transition-colors"
+              className="cursor-pointer flex items-center gap-1 p-2 hover:text-primary transition-colors"
               aria-label="Toggle language"
             >
               <Globe className="w-5 h-5" />
@@ -371,7 +371,7 @@ export function Navigation() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 hover:text-primary transition-colors"
+              className="cursor-pointer p-2 hover:text-primary transition-colors"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
