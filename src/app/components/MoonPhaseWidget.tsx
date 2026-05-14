@@ -4,167 +4,271 @@ import { useLanguage } from "./LanguageProvider";
 import { useTheme } from "./ThemeProvider";
 import { useState } from "react";
 
-// Custom Moon Phase Component
+/** Stylized lunar disc: sphere shading, halo, texture, and phase terminator */
 function MoonPhase({ phase, theme }: { phase: number; theme: string }) {
-  const size = 56;
+  const size = 70;
   const isDark = theme === "dark";
+  const uid = `${phase}-${theme}`;
+  const r = 34;
+  const cx = 50;
+  const cy = 50;
+
+  const bodyHi = isDark ? "#ece8e0" : "#faf7f0";
+  const bodyMid = isDark ? "#ada59a" : "#ded6cc";
+  const bodyLo = isDark ? "#5c5850" : "#a3988a";
+  const maria = isDark ? "rgba(18, 16, 14, 0.55)" : "rgba(48, 42, 36, 0.2)";
+  const shadowCore = isDark ? "rgba(4, 5, 8, 0.98)" : "rgba(12, 14, 20, 0.94)";
+  const shadowMid = isDark ? "rgba(16, 18, 24, 0.72)" : "rgba(36, 40, 48, 0.62)";
+  const shadowEdge = isDark ? "rgba(28, 30, 38, 0.35)" : "rgba(60, 64, 72, 0.28)";
+
+  const earthshine = [0.14, 0.18, 0.1, 0.05, 0, 0.05, 0.1, 0.18][phase] ?? 0;
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      {/* Moon Base Circle */}
-      <svg width={size} height={size} viewBox="0 0 100 100">
-        <defs>
-          <radialGradient
-            id={`moonGradient-${phase}-${theme}`}
-            cx="35%"
-            cy="35%"
-          >
-            <stop
-              offset="0%"
-              stopColor={
-                isDark ? "rgba(220, 230, 255, 0.95)" : "rgba(255, 255, 255, 1)"
-              }
-            />
-            <stop
-              offset="70%"
-              stopColor={
-                isDark
-                  ? "rgba(160, 180, 220, 0.85)"
-                  : "rgba(240, 245, 255, 0.95)"
-              }
-            />
-            <stop
-              offset="100%"
-              stopColor={
-                isDark ? "rgba(100, 120, 160, 0.7)" : "rgba(200, 215, 240, 0.9)"
-              }
-            />
-          </radialGradient>
-          <radialGradient
-            id={`shadowGradient-${phase}-${theme}`}
-            cx="50%"
-            cy="50%"
-          >
-            <stop
-              offset="0%"
-              stopColor={
-                isDark ? "rgba(20, 25, 40, 0.95)" : "rgba(100, 120, 150, 0.85)"
-              }
-            />
-            <stop
-              offset="100%"
-              stopColor={
-                isDark ? "rgba(10, 15, 25, 1)" : "rgba(80, 100, 130, 0.95)"
-              }
-            />
-          </radialGradient>
-          <filter id={`glow-${phase}-${theme}`}>
-            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* Outer Glow */}
-        <circle
-          cx="50"
-          cy="50"
-          r="50"
-          fill={
-            isDark ? "rgba(160, 180, 220, 0.1)" : "rgba(255, 255, 255, 0.2)"
-          }
-          filter={`url(#glow-${phase}-${theme})`}
-        />
-
-        {/* Moon Base */}
-        <circle
-          cx="50"
-          cy="50"
-          r="42"
-          fill={`url(#moonGradient-${phase}-${theme})`}
-        />
-
-        {/* Shadow based on phase */}
-        {phase !== 4 && phase !== 0 && (
-          <ellipse
-            cx={
-              phase < 4
-                ? 50 + 30 * (1 - Math.abs(phase - 2) / 2)
-                : 50 - 30 * (1 - Math.abs(phase - 6) / 2)
-            }
-            cy="50"
-            rx={Math.abs(42 * Math.cos((phase / 8) * Math.PI * 2))}
-            ry="42"
-            fill={`url(#shadowGradient-${phase}-${theme})`}
-          />
-        )}
-
-        {/* New Moon special case - full shadow */}
-        {phase === 0 && (
-          <circle
-            cx="50"
-            cy="50"
-            r="42"
-            fill={`url(#shadowGradient-${phase}-${theme})`}
-          />
-        )}
-
-        {/* Crater details for Full Moon */}
-        {phase === 4 && (
-          <>
-            <circle
-              cx="40"
-              cy="35"
-              r="5"
-              fill={
-                isDark ? "rgba(80, 100, 140, 0.3)" : "rgba(180, 190, 210, 0.4)"
-              }
-            />
-            <circle
-              cx="60"
-              cy="45"
-              r="3"
-              fill={
-                isDark ? "rgba(80, 100, 140, 0.3)" : "rgba(180, 190, 210, 0.4)"
-              }
-            />
-            <circle
-              cx="50"
-              cy="60"
-              r="4"
-              fill={
-                isDark ? "rgba(80, 100, 140, 0.3)" : "rgba(180, 190, 210, 0.4)"
-              }
-            />
-          </>
-        )}
-
-        {/* Highlight */}
-        <circle
-          cx="38"
-          cy="38"
-          r="12"
-          fill={
-            isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.4)"
-          }
-          style={{ filter: "blur(3px)" }}
-        />
-      </svg>
-
-      {/* Subtle outer ring */}
+    <div
+      className="relative mx-auto flex items-center justify-center"
+      style={{ width: size + 14, height: size + 14 }}
+    >
       <div
-        className="absolute inset-0 rounded-full"
+        className="pointer-events-none absolute rounded-full"
         style={{
-          border: isDark
-            ? "1px solid rgba(160, 180, 220, 0.2)"
-            : "1px solid rgba(200, 215, 240, 0.3)",
-          boxShadow: isDark
-            ? "0 0 20px rgba(160, 180, 220, 0.15)"
-            : "0 0 15px rgba(200, 215, 240, 0.3)",
+          width: size + 10,
+          height: size + 10,
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          background: isDark
+            ? "radial-gradient(circle, rgba(130, 150, 200, 0.22) 0%, rgba(80, 90, 120, 0.08) 45%, transparent 72%)"
+            : "radial-gradient(circle, rgba(200, 210, 235, 0.45) 0%, rgba(180, 190, 215, 0.15) 50%, transparent 72%)",
         }}
       />
+      <div
+        className="relative rounded-full p-[2px]"
+        style={{
+          background: isDark
+            ? "linear-gradient(145deg, rgba(255,255,255,0.12), rgba(80,90,120,0.25))"
+            : "linear-gradient(145deg, rgba(255,255,255,0.9), rgba(180,190,210,0.5))",
+          boxShadow: isDark
+            ? "0 2px 12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)"
+            : "0 4px 14px rgba(60,70,100,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
+        }}
+      >
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 100 100"
+          className="block rounded-full"
+          aria-hidden
+        >
+          <defs>
+            <radialGradient id={`moon-sphere-${uid}`} cx="28%" cy="26%" r="72%">
+              <stop offset="0%" stopColor={bodyHi} />
+              <stop offset="38%" stopColor={bodyMid} />
+              <stop offset="78%" stopColor={bodyLo} />
+              <stop offset="100%" stopColor={bodyLo} />
+            </radialGradient>
+            <radialGradient id={`moon-shadow-${uid}`} cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stopColor={shadowCore} />
+              <stop offset="55%" stopColor={shadowMid} />
+              <stop offset="100%" stopColor={shadowEdge} stopOpacity={0} />
+            </radialGradient>
+            <linearGradient
+              id={`moon-limb-${uid}`}
+              x1="18%"
+              y1="15%"
+              x2="88%"
+              y2="92%"
+            >
+              <stop
+                offset="0%"
+                stopColor={isDark ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.55)"}
+              />
+              <stop offset="42%" stopColor="rgba(255,255,255,0)" />
+              <stop
+                offset="100%"
+                stopColor={isDark ? "rgba(0,0,0,0.35)" : "rgba(55,50,45,0.2)"}
+              />
+            </linearGradient>
+            <radialGradient id={`crater-a-${uid}`} cx="40%" cy="40%" r="50%">
+              <stop offset="0%" stopColor="rgba(0,0,0,0.15)" />
+              <stop offset="70%" stopColor="rgba(0,0,0,0.35)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0.06)" />
+            </radialGradient>
+            <radialGradient id={`crater-b-${uid}`} cx="45%" cy="45%" r="50%">
+              <stop offset="0%" stopColor="rgba(0,0,0,0.12)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0.04)" />
+            </radialGradient>
+            <filter id={`moon-blur-${uid}`} x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" />
+            </filter>
+            <filter id={`moon-grain-${uid}`}>
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.75"
+                numOctaves="4"
+                seed="31"
+                result="n"
+              />
+              <feColorMatrix
+                in="n"
+                type="matrix"
+                values="0 0 0 0 0.52
+                        0 0 0 0 0.5
+                        0 0 0 0 0.48
+                        0 0 0 0.18 0"
+                result="g"
+              />
+            </filter>
+            <clipPath id={`moon-clip-${uid}`}>
+              <circle cx={cx} cy={cy} r={r} />
+            </clipPath>
+          </defs>
+
+          <g clipPath={`url(#moon-clip-${uid})`}>
+            <circle cx={cx} cy={cy} r={r} fill={`url(#moon-sphere-${uid})`} />
+
+            {earthshine > 0 && phase !== 4 && (
+              <circle
+                cx={cx}
+                cy={cy}
+                r={r - 0.5}
+                fill={isDark ? "#8a8580" : "#b0aaa2"}
+                opacity={earthshine}
+                style={{ mixBlendMode: isDark ? "screen" : "multiply" }}
+              />
+            )}
+
+            <ellipse
+              cx="36"
+              cy="54"
+              rx="20"
+              ry="13"
+              fill={maria}
+              opacity={0.85}
+              filter={`url(#moon-blur-${uid})`}
+            />
+            <ellipse
+              cx="58"
+              cy="42"
+              rx="12"
+              ry="16"
+              fill={maria}
+              opacity={0.7}
+              filter={`url(#moon-blur-${uid})`}
+            />
+            <ellipse
+              cx="50"
+              cy="62"
+              rx="14"
+              ry="9"
+              fill={maria}
+              opacity={0.6}
+              filter={`url(#moon-blur-${uid})`}
+            />
+
+            <circle
+              cx="43"
+              cy="36"
+              r="6"
+              fill={`url(#crater-a-${uid})`}
+              opacity={isDark ? 0.9 : 0.75}
+            />
+            <circle
+              cx="62"
+              cy="52"
+              r="3.8"
+              fill={`url(#crater-b-${uid})`}
+              opacity={isDark ? 0.85 : 0.7}
+            />
+            <circle
+              cx="52"
+              cy="64"
+              r="4.5"
+              fill={`url(#crater-a-${uid})`}
+              opacity={isDark ? 0.75 : 0.65}
+            />
+
+            <rect
+              x="0"
+              y="0"
+              width="100"
+              height="100"
+              fill="#fff"
+              filter={`url(#moon-grain-${uid})`}
+              opacity={isDark ? 0.28 : 0.4}
+              style={{ mixBlendMode: "multiply" }}
+            />
+
+            <circle
+              cx={cx}
+              cy={cy}
+              r={r}
+              fill={`url(#moon-limb-${uid})`}
+              style={{ mixBlendMode: isDark ? "soft-light" : "overlay" }}
+            />
+
+            <ellipse
+              cx="32"
+              cy="30"
+              rx="11"
+              ry="9"
+              fill="rgba(255,255,255,0.5)"
+              opacity={isDark ? 0.12 : 0.28}
+              style={{ filter: "blur(5px)" }}
+            />
+
+            {phase === 0 && (
+              <circle cx={cx} cy={cy} r={r} fill={`url(#moon-shadow-${uid})`} />
+            )}
+
+            {phase !== 4 && phase !== 0 && (
+              <ellipse
+                cx={
+                  phase < 4
+                    ? 50 + 26 * (1 - Math.abs(phase - 2) / 2)
+                    : 50 - 26 * (1 - Math.abs(phase - 6) / 2)
+                }
+                cy="50"
+                rx={Math.abs(r * Math.cos((phase / 8) * Math.PI * 2))}
+                ry={r}
+                fill={`url(#moon-shadow-${uid})`}
+                filter={`url(#moon-blur-${uid})`}
+                opacity={0.97}
+              />
+            )}
+
+            {phase === 4 && (
+              <>
+                <circle
+                  cx="44"
+                  cy="33"
+                  r="1.6"
+                  fill={isDark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.35)"}
+                />
+                <circle
+                  cx="58"
+                  cy="48"
+                  r="1.1"
+                  fill={isDark ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.28)"}
+                />
+                <path
+                  d="M 48 28 L 52 40 L 64 38 Z"
+                  fill={isDark ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.12)"}
+                  style={{ filter: "blur(1.5px)" }}
+                />
+              </>
+            )}
+          </g>
+
+          <circle
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill="none"
+            stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(80,75,70,0.2)"}
+            strokeWidth="1"
+          />
+        </svg>
+      </div>
     </div>
   );
 }

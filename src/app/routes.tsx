@@ -25,6 +25,11 @@ const FAQ = lazy(() =>
 const Checkout = lazy(() =>
   import("./components/pages/Checkout").then((m) => ({ default: m.Checkout })),
 );
+const OrderConfirmation = lazy(() =>
+  import("./components/pages/OrderConfirmation").then((m) => ({
+    default: m.OrderConfirmation,
+  })),
+);
 const RefundPolicy = lazy(() =>
   import("./components/pages/RefundPolicy").then((m) => ({
     default: m.RefundPolicy,
@@ -69,6 +74,7 @@ export const router = createBrowserRouter([
       { path: "faq", Component: FAQ },
       { path: "contact", Component: Contact },
       { path: "checkout", Component: Checkout },
+      { path: "order-confirmation", Component: OrderConfirmation },
       { path: "refund-policy", Component: RefundPolicy },
       { path: "terms-conditions", Component: TermsConditions },
       { path: "privacy-policy", Component: PrivacyPolicy },

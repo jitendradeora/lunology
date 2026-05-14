@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ShoppingBag,
@@ -21,13 +21,18 @@ import {
   amountExcludingVat,
   roundMoney,
 } from "../../lib/vat";
+import visaPayIcon from "../../../imports/pay/visa-card-pay.png";
+import mastercardPayIcon from "../../../imports/pay/mastercard-card-pay.png";
+import madaPayIcon from "../../../imports/pay/mada-card-pay.png";
+import applePayIcon from "../../../imports/pay/apple-card-pay.png";
 
-type CheckoutMode = "guest" | "login" | "register";
+type CheckoutMode = "login" | "register";
 
 export function Checkout() {
-  const { items, totalPrice } = useCart();
+  const navigate = useNavigate();
+  const { items, totalPrice, clearCart } = useCart();
   const { t, language } = useLanguage();
-  const [mode, setMode] = useState<CheckoutMode>("guest");
+  const [mode, setMode] = useState<CheckoutMode>("login");
   const [paymentMethod, setPaymentMethod] = useState<
     "card" | "tamara" | "apple"
   >("card");
@@ -39,6 +44,16 @@ export function Checkout() {
   const vatAmount = roundMoney(totalPrice - subtotalWithoutVat);
   const afterVatSubtotal = totalPrice;
   const grandTotal = roundMoney(afterVatSubtotal + CHECKOUT_SHIPPING_SAR);
+
+  const handlePlaceOrder = () => {
+    const orderNumber = `LUN-${Date.now().toString(36).slice(-9).toUpperCase()}`;
+    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    clearCart();
+    navigate("/order-confirmation", {
+      replace: true,
+      state: { orderNumber, grandTotal, itemCount },
+    });
+  };
 
   if (items.length === 0) {
     return (
@@ -106,17 +121,6 @@ export function Checkout() {
               </h2>
 
               <div className="flex gap-2 mb-6">
-                <button
-                  type="button"
-                  onClick={() => setMode("guest")}
-                  className={`flex-1 px-4 py-3 rounded-xl transition-all ${
-                    mode === "guest"
-                      ? "bg-primary text-primary-foreground shadow-lg"
-                      : "bg-muted hover:bg-muted/80"
-                  }`}
-                >
-                  {language === "ar" ? "ضيف" : "Guest"}
-                </button>
                 <button
                   type="button"
                   onClick={() => setMode("login")}
@@ -261,19 +265,6 @@ export function Checkout() {
                   </motion.div>
                 )}
 
-                {mode === "guest" && (
-                  <motion.div
-                    key="guest"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="text-center py-4 text-muted-foreground"
-                  >
-                    {language === "ar"
-                      ? "المتابعة كضيف - لا حاجة لحساب"
-                      : "Continue as guest - No account needed"}
-                  </motion.div>
-                )}
               </AnimatePresence>
             </div>
 
@@ -494,22 +485,28 @@ export function Checkout() {
                           : "Credit/Debit Card"}
                       </span>
                     </div>
-                    <div className="flex gap-3 items-center">
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
-                        alt="Visa"
-                        className="h-5"
-                      />
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-                        alt="Mastercard"
-                        className="h-5"
-                      />
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Mada_Logo.svg/512px-Mada_Logo.svg.png"
-                        alt="Mada"
-                        className="h-5"
-                      />
+                    <div className="flex gap-2 items-center">
+                      <span className="w-11 h-7 rounded-md border border-border/50 bg-white flex items-center justify-center overflow-hidden p-0.5">
+                        <img
+                          src={visaPayIcon}
+                          alt=""
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </span>
+                      <span className="w-11 h-7 rounded-md border border-border/50 bg-white flex items-center justify-center overflow-hidden p-0.5">
+                        <img
+                          src={mastercardPayIcon}
+                          alt=""
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </span>
+                      <span className="w-11 h-7 rounded-md border border-border/50 bg-white flex items-center justify-center overflow-hidden p-0.5">
+                        <img
+                          src={madaPayIcon}
+                          alt=""
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </span>
                     </div>
                   </div>
                 </button>
@@ -547,7 +544,13 @@ export function Checkout() {
                   aria-checked={paymentMethod === "apple"}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xl">🍎</span>
+                    <span className="w-14 h-9 rounded-md border border-border/50 bg-white flex items-center justify-center overflow-hidden p-1 shrink-0">
+                      <img
+                        src={applePayIcon}
+                        alt=""
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </span>
                     <span>Apple Pay</span>
                   </div>
                 </button>
@@ -670,6 +673,7 @@ export function Checkout() {
 
               <button
                 type="button"
+                onClick={handlePlaceOrder}
                 className="w-full mt-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all flex items-center justify-center gap-2"
               >
                 <CheckCircle className="w-5 h-5" />

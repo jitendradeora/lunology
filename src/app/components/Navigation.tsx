@@ -119,7 +119,9 @@ export function Navigation() {
               onMouseLeave={() => setDigitalBooksMenu(false)}
               onFocusCapture={() => setDigitalBooksMenu(true)}
               onBlurCapture={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                if (
+                  !event.currentTarget.contains(event.relatedTarget as Node)
+                ) {
                   setDigitalBooksMenu(false);
                 }
               }}
@@ -154,23 +156,8 @@ export function Navigation() {
                     transition={{ duration: 0.2 }}
                     id={digitalMenuId}
                     role="menu"
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[650px] bg-popover/95 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-2xl"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[650px] bg-popover border border-border rounded-2xl overflow-hidden shadow-2xl"
                   >
-                    {/* Mega Menu Header */}
-                    <div className="px-6 py-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-transparent">
-                      <h3
-                        className="text-base font-medium"
-                        style={{ fontFamily: "var(--font-heading)" }}
-                      >
-                        {language === "ar" ? "الكتب الرقمية" : "Digital Books"}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {language === "ar"
-                          ? "تنزيل فوري، وصول مدى الحياة"
-                          : "Instant download, lifetime access"}
-                      </p>
-                    </div>
-
                     <div className="grid grid-cols-2 p-6 gap-6">
                       <div className="space-y-2">
                         <h4 className="text-xs uppercase text-muted-foreground mb-3 px-2">
@@ -242,7 +229,9 @@ export function Navigation() {
               onMouseLeave={() => setPrintedBooksMenu(false)}
               onFocusCapture={() => setPrintedBooksMenu(true)}
               onBlurCapture={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                if (
+                  !event.currentTarget.contains(event.relatedTarget as Node)
+                ) {
                   setPrintedBooksMenu(false);
                 }
               }}
@@ -277,23 +266,8 @@ export function Navigation() {
                     transition={{ duration: 0.2 }}
                     id={printedMenuId}
                     role="menu"
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[650px] bg-popover/95 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-2xl"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[650px] bg-popover border border-border rounded-2xl overflow-hidden shadow-2xl"
                   >
-                    {/* Mega Menu Header */}
-                    <div className="px-6 py-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-transparent">
-                      <h3
-                        className="text-base font-medium"
-                        style={{ fontFamily: "var(--font-heading)" }}
-                      >
-                        {language === "ar" ? "الكتب المطبوعة" : "Printed Books"}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {language === "ar"
-                          ? "جودة ممتازة، شحن سريع"
-                          : "Premium quality, fast shipping"}
-                      </p>
-                    </div>
-
                     <div className="grid grid-cols-2 p-6 gap-6">
                       <div className="space-y-2">
                         <h4 className="text-xs uppercase text-muted-foreground mb-3 px-2">
