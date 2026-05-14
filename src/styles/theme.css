@@ -195,6 +195,31 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    cursor: pointer;
+  }
+
+  input[type="button"]:disabled,
+  input[type="submit"]:disabled,
+  input[type="reset"]:disabled {
+    cursor: not-allowed;
   }
 
   input {

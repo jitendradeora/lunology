@@ -62,6 +62,7 @@ export function BioGeometry() {
             : "Discover the science of BioGeometry and how geometric shapes and patterns affect our energy and wellbeing"
         }
         keywords="biogeometry, sacred geometry, energy healing, vibrational medicine, environmental harmony, consciousness"
+        canonicalPathOrUrl="/biogeometry"
       />
 
       <div className="pt-20 min-h-screen">

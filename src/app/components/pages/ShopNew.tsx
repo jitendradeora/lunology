@@ -3,9 +3,15 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { motion } from 'motion/react';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { useLanguage } from '../LanguageProvider';
+import { FormFieldError } from '../FormFieldError';
 import { SEO, generateBreadcrumbSchema } from '../SEO';
 import { SHOP_PRODUCTS } from '../../data/catalog';
 import type { ShopCategory } from '../../data/catalog';
+import {
+  validatePriceRange,
+  inputBorderClass,
+  type Lang,
+} from '../../lib/formValidation';
 
 const products = SHOP_PRODUCTS;
 
@@ -20,6 +26,7 @@ export function Shop() {
   const { category } = useParams();
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const lang: Lang = language === 'ar' ? 'ar' : 'en';
   const [selectedCategory, setSelectedCategory] = useState<'all' | ShopCategory>(
     () =>
       category && SHOP_CATEGORIES.includes(category as 'all' | ShopCategory)
@@ -27,8 +34,41 @@ export function Shop() {
         : 'all',
   );
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
+  const [priceFilterError, setPriceFilterError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'newest' | 'price-low' | 'price-high'>('newest');
   const [showFilters, setShowFilters] = useState(false);
+
+  const normalizePricePair = (a: number, b: number): [number, number] => {
+    const x = !Number.isFinite(a) || a < 0 ? 0 : a;
+    const y = !Number.isFinite(b) || b < 0 ? 0 : b;
+    const lo = Math.min(x, y);
+    const hi = Math.max(x, y);
+    return [lo, hi];
+  };
+
+  const setMinPrice = (raw: string) => {
+    if (raw !== '' && Number.isNaN(Number.parseInt(raw, 10))) {
+      setPriceFilterError(validatePriceRange(Number.NaN, Number.NaN, lang));
+      return;
+    }
+    const v = raw === '' ? 0 : Math.max(0, Number.parseInt(raw, 10) || 0);
+    setPriceRange(([_, mx]) => normalizePricePair(v, mx));
+    setPriceFilterError(null);
+  };
+
+  const setMaxPrice = (raw: string) => {
+    if (raw !== '' && Number.isNaN(Number.parseInt(raw, 10))) {
+      setPriceFilterError(validatePriceRange(Number.NaN, Number.NaN, lang));
+      return;
+    }
+    const v = raw === '' ? 5000 : Math.max(0, Number.parseInt(raw, 10) || 0);
+    setPriceRange(([mn, _]) => normalizePricePair(mn, v));
+    setPriceFilterError(null);
+  };
+
+  const validatePricesOnBlur = () => {
+    setPriceFilterError(validatePriceRange(priceRange[0], priceRange[1], lang));
+  };
 
   useEffect(() => {
     if (!category) {
@@ -76,6 +116,13 @@ export function Shop() {
           ? 'BioGeometry energy-balancing products for personal and home use. Prices include VAT.'
           : 'Shop Lunology\'s complete collection of spiritual products, dream journals, lunar planners, element candles, and cosmic wisdom guides.';
 
+  const canonicalShopPath =
+    category &&
+    category !== "all" &&
+    SHOP_CATEGORIES.includes(category as "all" | ShopCategory)
+      ? `/shop/${category}`
+      : "/shop";
+
   const filteredProducts = products
     .filter((product) => {
       const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
@@ -94,6 +141,7 @@ export function Shop() {
         title={shopTitle}
         description={shopDescription}
         keywords="Lunology shop, spiritual products, dream journals, lunar planners, meditation guides, element candles, cosmic wisdom, digital books, printed books"
+        canonicalPathOrUrl={canonicalShopPath}
         schema={breadcrumbSchema}
       />
       <div className="pt-20 min-h-screen">
@@ -181,25 +229,34 @@ export function Shop() {
             {/* Right side - Sort and Price */}
             <div className={`${showFilters ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-3 w-full lg:w-auto`}>
               {/* Price Range */}
+              <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-xl">
                 <span className="text-sm text-muted-foreground whitespace-nowrap">{t('shop.priceRange')}:</span>
                 <input
                   type="number"
+                  min={0}
                   value={priceRange[0]}
-                  onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
-                  className="w-16 px-2 py-1 bg-background border border-border rounded text-sm"
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  onBlur={validatePricesOnBlur}
+                  className={`w-16 px-2 py-1 bg-background border-2 rounded text-sm focus:outline-none ${inputBorderClass(Boolean(priceFilterError))}`}
                   placeholder={t('shop.min')}
                   aria-label={language === 'ar' ? 'الحد الأدنى للسعر' : 'Minimum price'}
+                  aria-invalid={Boolean(priceFilterError)}
                 />
                 <span>-</span>
                 <input
                   type="number"
+                  min={0}
                   value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 5000])}
-                  className="w-16 px-2 py-1 bg-background border border-border rounded text-sm"
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  onBlur={validatePricesOnBlur}
+                  className={`w-16 px-2 py-1 bg-background border-2 rounded text-sm focus:outline-none ${inputBorderClass(Boolean(priceFilterError))}`}
                   placeholder={t('shop.max')}
                   aria-label={language === 'ar' ? 'الحد الأقصى للسعر' : 'Maximum price'}
+                  aria-invalid={Boolean(priceFilterError)}
                 />
+              </div>
+              <FormFieldError message={priceFilterError} />
               </div>
 
               {/* Sort */}

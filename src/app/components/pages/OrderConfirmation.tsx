@@ -53,6 +53,8 @@ export function OrderConfirmation() {
             ? "تم تأكيد طلبك من Lunology."
             : "Your Lunology order has been confirmed."
         }
+        robots="noindex, nofollow"
+        canonicalPathOrUrl="/order-confirmation"
       />
 
       <div className="pt-20 min-h-screen bg-gradient-to-b from-muted/30 via-background to-background relative overflow-hidden">

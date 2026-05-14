@@ -1,9 +1,16 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { Home, ArrowRight } from 'lucide-react';
+import { SEO } from '../SEO';
 
 export function NotFound() {
   return (
+    <>
+      <SEO
+        title="404 - Page not found | Lunology"
+        description="This Lunology page could not be found. Return home or browse the shop for spiritual products and cosmic resources."
+        robots="noindex, follow"
+      />
     <div className="pt-20 min-h-screen flex items-center justify-center px-4">
       <div className="max-w-2xl mx-auto text-center">
         <motion.div
@@ -48,5 +55,6 @@ export function NotFound() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useCart } from "../CartProvider";
 import { useLanguage } from "../LanguageProvider";
+import { FormFieldError } from "../FormFieldError";
 import { CHECKOUT_COUNTRIES } from "../../data/countries";
 import {
   CHECKOUT_SHIPPING_SAR,
@@ -25,6 +26,18 @@ import visaPayIcon from "../../../imports/pay/visa-card-pay.png";
 import mastercardPayIcon from "../../../imports/pay/mastercard-card-pay.png";
 import madaPayIcon from "../../../imports/pay/mada-card-pay.png";
 import applePayIcon from "../../../imports/pay/apple-card-pay.png";
+import {
+  validateEmail,
+  validatePassword,
+  validatePhone,
+  validateStreet,
+  validateShortText,
+  validateNationalShortAddress,
+  validatePostalOptional,
+  inputBorderClass,
+  type Lang,
+} from "../../lib/formValidation";
+import { SEO } from "../SEO";
 
 type CheckoutMode = "login" | "register";
 
@@ -40,12 +53,95 @@ export function Checkout() {
   const [countryCode, setCountryCode] = useState("SA");
   const [district, setDistrict] = useState("");
 
+  const lang: Lang = language === "ar" ? "ar" : "en";
+
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerName, setRegisterName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [billing, setBilling] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    street: "",
+    city: "",
+    province: "",
+    postal: "",
+  });
+  const [checkoutErrors, setCheckoutErrors] = useState<
+    Record<string, string | undefined>
+  >({});
+  const [authErrors, setAuthErrors] = useState<
+    Record<string, string | undefined>
+  >({});
+
+  const clearCheckoutField = (key: string) =>
+    setCheckoutErrors((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+
+  const clearAuthField = (key: string) =>
+    setAuthErrors((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+
+  const handleLoginSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const eEmail = validateEmail(loginEmail, lang);
+    const ePass = validatePassword(loginPassword, 6, lang);
+    const next: Record<string, string | undefined> = {};
+    if (eEmail) next.loginEmail = eEmail;
+    if (ePass) next.loginPassword = ePass;
+    setAuthErrors(next);
+  };
+
+  const handleRegisterSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const eName = validateShortText(registerName, 2, lang);
+    const eEmail = validateEmail(registerEmail, lang);
+    const ePass = validatePassword(registerPassword, 8, lang);
+    const next: Record<string, string | undefined> = {};
+    if (eName) next.registerName = eName;
+    if (eEmail) next.registerEmail = eEmail;
+    if (ePass) next.registerPassword = ePass;
+    setAuthErrors(next);
+  };
+
+  const validateBillingForOrder = (): boolean => {
+    const next: Record<string, string> = {};
+    const put = (key: string, err: string | null) => {
+      if (err) next[key] = err;
+    };
+    put("firstName", validateShortText(billing.firstName, 2, lang));
+    put("lastName", validateShortText(billing.lastName, 2, lang));
+    put("billingEmail", validateEmail(billing.email, lang));
+    put("phone", validatePhone(billing.phone, lang));
+    put("street", validateStreet(billing.street, lang));
+    put("district", validateShortText(district, 2, lang));
+    put(
+      "nationalShortAddress",
+      validateNationalShortAddress(nationalShortAddress, lang),
+    );
+    put("city", validateShortText(billing.city, 2, lang));
+    put("province", validateShortText(billing.province, 2, lang));
+    put("postal", validatePostalOptional(billing.postal, lang));
+    setCheckoutErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
   const subtotalWithoutVat = amountExcludingVat(totalPrice);
   const vatAmount = roundMoney(totalPrice - subtotalWithoutVat);
   const afterVatSubtotal = totalPrice;
   const grandTotal = roundMoney(afterVatSubtotal + CHECKOUT_SHIPPING_SAR);
 
   const handlePlaceOrder = () => {
+    if (!validateBillingForOrder()) return;
     const orderNumber = `LUN-${Date.now().toString(36).slice(-9).toUpperCase()}`;
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
     clearCart();
@@ -57,6 +153,21 @@ export function Checkout() {
 
   if (items.length === 0) {
     return (
+      <>
+        <SEO
+          title={
+            language === "ar"
+              ? "السلة فارغة | Lunology"
+              : "Empty cart | Lunology"
+          }
+          description={
+            language === "ar"
+              ? "أضف منتجات إلى سلتك للمتابعة إلى الدفع على Lunology."
+              : "Add items to your Lunology cart to continue to secure checkout."
+          }
+          robots="noindex, follow"
+          canonicalPathOrUrl="/checkout"
+        />
       <div className="pt-20 min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
@@ -79,10 +190,24 @@ export function Checkout() {
           </Link>
         </div>
       </div>
+      </>
     );
   }
 
   return (
+    <>
+      <SEO
+        title={
+          language === "ar" ? "إتمام الطلب | Lunology" : "Checkout | Lunology"
+        }
+        description={
+          language === "ar"
+            ? "أكمل طلبك بأمان عبر Lunology مع خيارات الدفع المناسبة."
+            : "Complete your Lunology order securely with billing details and your preferred payment method."
+        }
+        robots="noindex, nofollow"
+        canonicalPathOrUrl="/checkout"
+      />
     <div className="pt-20 min-h-screen bg-gradient-to-b from-muted/20 to-background">
       {/* Header */}
       <section
@@ -154,46 +279,66 @@ export function Checkout() {
                     exit={{ opacity: 0, y: -10 }}
                     className="space-y-4"
                   >
-                    <div>
-                      <label
-                        htmlFor="login-email"
-                        className="block text-sm mb-2"
-                      >
-                        {language === "ar" ? "البريد الإلكتروني" : "Email"}
-                      </label>
-                      <input
-                        type="email"
-                        id="login-email"
-                        className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder={
-                          language === "ar"
-                            ? "بريدك@الإلكتروني.com"
-                            : "your@email.com"
-                        }
-                        autoComplete="email"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="login-password"
-                        className="block text-sm mb-2"
-                      >
-                        {language === "ar" ? "كلمة المرور" : "Password"}
-                      </label>
-                      <input
-                        type="password"
-                        id="login-password"
-                        className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder="••••••••"
-                        autoComplete="current-password"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
+                    <form
+                      onSubmit={handleLoginSubmit}
+                      className="space-y-4"
+                      noValidate
                     >
-                      {language === "ar" ? "تسجيل الدخول" : "Sign In"}
-                    </button>
+                      <div>
+                        <label
+                          htmlFor="login-email"
+                          className="block text-sm mb-2"
+                        >
+                          {language === "ar" ? "البريد الإلكتروني" : "Email"}
+                        </label>
+                        <input
+                          type="email"
+                          id="login-email"
+                          value={loginEmail}
+                          onChange={(e) => {
+                            setLoginEmail(e.target.value);
+                            clearAuthField("loginEmail");
+                          }}
+                          aria-invalid={Boolean(authErrors.loginEmail)}
+                          className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(authErrors.loginEmail))}`}
+                          placeholder={
+                            language === "ar"
+                              ? "بريدك@الإلكتروني.com"
+                              : "your@email.com"
+                          }
+                          autoComplete="email"
+                        />
+                        <FormFieldError message={authErrors.loginEmail} />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="login-password"
+                          className="block text-sm mb-2"
+                        >
+                          {language === "ar" ? "كلمة المرور" : "Password"}
+                        </label>
+                        <input
+                          type="password"
+                          id="login-password"
+                          value={loginPassword}
+                          onChange={(e) => {
+                            setLoginPassword(e.target.value);
+                            clearAuthField("loginPassword");
+                          }}
+                          aria-invalid={Boolean(authErrors.loginPassword)}
+                          className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(authErrors.loginPassword))}`}
+                          placeholder="••••••••"
+                          autoComplete="current-password"
+                        />
+                        <FormFieldError message={authErrors.loginPassword} />
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
+                      >
+                        {language === "ar" ? "تسجيل الدخول" : "Sign In"}
+                      </button>
+                    </form>
                   </motion.div>
                 )}
 
@@ -205,63 +350,90 @@ export function Checkout() {
                     exit={{ opacity: 0, y: -10 }}
                     className="space-y-4"
                   >
-                    <div>
-                      <label
-                        htmlFor="register-name"
-                        className="block text-sm mb-2"
-                      >
-                        {language === "ar" ? "الاسم الكامل" : "Full Name"}
-                      </label>
-                      <input
-                        type="text"
-                        id="register-name"
-                        className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder={
-                          language === "ar" ? "اسمك الكامل" : "Your full name"
-                        }
-                        autoComplete="name"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="register-email"
-                        className="block text-sm mb-2"
-                      >
-                        {language === "ar" ? "البريد الإلكتروني" : "Email"}
-                      </label>
-                      <input
-                        type="email"
-                        id="register-email"
-                        className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder={
-                          language === "ar"
-                            ? "بريدك@الإلكتروني.com"
-                            : "your@email.com"
-                        }
-                        autoComplete="email"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="register-password"
-                        className="block text-sm mb-2"
-                      >
-                        {language === "ar" ? "كلمة المرور" : "Password"}
-                      </label>
-                      <input
-                        type="password"
-                        id="register-password"
-                        className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
-                        placeholder="••••••••"
-                        autoComplete="new-password"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
+                    <form
+                      onSubmit={handleRegisterSubmit}
+                      className="space-y-4"
+                      noValidate
                     >
-                      {language === "ar" ? "إنشاء حساب" : "Create Account"}
-                    </button>
+                      <div>
+                        <label
+                          htmlFor="register-name"
+                          className="block text-sm mb-2"
+                        >
+                          {language === "ar" ? "الاسم الكامل" : "Full Name"}
+                        </label>
+                        <input
+                          type="text"
+                          id="register-name"
+                          value={registerName}
+                          onChange={(e) => {
+                            setRegisterName(e.target.value);
+                            clearAuthField("registerName");
+                          }}
+                          aria-invalid={Boolean(authErrors.registerName)}
+                          className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(authErrors.registerName))}`}
+                          placeholder={
+                            language === "ar" ? "اسمك الكامل" : "Your full name"
+                          }
+                          autoComplete="name"
+                        />
+                        <FormFieldError message={authErrors.registerName} />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="register-email"
+                          className="block text-sm mb-2"
+                        >
+                          {language === "ar" ? "البريد الإلكتروني" : "Email"}
+                        </label>
+                        <input
+                          type="email"
+                          id="register-email"
+                          value={registerEmail}
+                          onChange={(e) => {
+                            setRegisterEmail(e.target.value);
+                            clearAuthField("registerEmail");
+                          }}
+                          aria-invalid={Boolean(authErrors.registerEmail)}
+                          className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(authErrors.registerEmail))}`}
+                          placeholder={
+                            language === "ar"
+                              ? "بريدك@الإلكتروني.com"
+                              : "your@email.com"
+                          }
+                          autoComplete="email"
+                        />
+                        <FormFieldError message={authErrors.registerEmail} />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="register-password"
+                          className="block text-sm mb-2"
+                        >
+                          {language === "ar" ? "كلمة المرور" : "Password"}
+                        </label>
+                        <input
+                          type="password"
+                          id="register-password"
+                          value={registerPassword}
+                          onChange={(e) => {
+                            setRegisterPassword(e.target.value);
+                            clearAuthField("registerPassword");
+                          }}
+                          aria-invalid={Boolean(authErrors.registerPassword)}
+                          className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(authErrors.registerPassword))}`}
+                          placeholder="••••••••"
+                          autoComplete="new-password"
+                        />
+                        <FormFieldError message={authErrors.registerPassword} />
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-lg transition-all"
+                      >
+                        {language === "ar" ? "إنشاء حساب" : "Create Account"}
+                      </button>
+                    </form>
                   </motion.div>
                 )}
 
@@ -283,57 +455,123 @@ export function Checkout() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm mb-2">
+                    <label
+                      htmlFor="checkout-first-name"
+                      className="block text-sm mb-2"
+                    >
                       <User className="w-4 h-4 inline-block mr-1" />
                       {language === "ar" ? "الاسم الأول" : "First Name"}
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      id="checkout-first-name"
+                      value={billing.firstName}
+                      onChange={(e) => {
+                        setBilling((b) => ({
+                          ...b,
+                          firstName: e.target.value,
+                        }));
+                        clearCheckoutField("firstName");
+                      }}
+                      autoComplete="given-name"
+                      aria-invalid={Boolean(checkoutErrors.firstName)}
+                      className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.firstName))}`}
                     />
+                    <FormFieldError message={checkoutErrors.firstName} />
                   </div>
                   <div>
-                    <label className="block text-sm mb-2">
+                    <label
+                      htmlFor="checkout-last-name"
+                      className="block text-sm mb-2"
+                    >
                       <User className="w-4 h-4 inline-block mr-1" />
                       {language === "ar" ? "اسم العائلة" : "Last Name"}
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      id="checkout-last-name"
+                      value={billing.lastName}
+                      onChange={(e) => {
+                        setBilling((b) => ({
+                          ...b,
+                          lastName: e.target.value,
+                        }));
+                        clearCheckoutField("lastName");
+                      }}
+                      autoComplete="family-name"
+                      aria-invalid={Boolean(checkoutErrors.lastName)}
+                      className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.lastName))}`}
                     />
+                    <FormFieldError message={checkoutErrors.lastName} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-2">
+                  <label
+                    htmlFor="checkout-billing-email"
+                    className="block text-sm mb-2"
+                  >
                     <Mail className="w-4 h-4 inline-block mr-1" />
                     {language === "ar" ? "البريد الإلكتروني" : "Email Address"}
                   </label>
                   <input
                     type="email"
-                    className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                    id="checkout-billing-email"
+                    value={billing.email}
+                    onChange={(e) => {
+                      setBilling((b) => ({ ...b, email: e.target.value }));
+                      clearCheckoutField("billingEmail");
+                    }}
+                    autoComplete="email"
+                    aria-invalid={Boolean(checkoutErrors.billingEmail)}
+                    className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.billingEmail))}`}
                   />
+                  <FormFieldError message={checkoutErrors.billingEmail} />
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-2">
+                  <label
+                    htmlFor="checkout-phone"
+                    className="block text-sm mb-2"
+                  >
                     <Phone className="w-4 h-4 inline-block mr-1" />
                     {language === "ar" ? "رقم الهاتف" : "Phone Number"}
                   </label>
                   <input
                     type="tel"
-                    className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                    id="checkout-phone"
+                    value={billing.phone}
+                    onChange={(e) => {
+                      setBilling((b) => ({ ...b, phone: e.target.value }));
+                      clearCheckoutField("phone");
+                    }}
+                    autoComplete="tel"
+                    aria-invalid={Boolean(checkoutErrors.phone)}
+                    className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.phone))}`}
                   />
+                  <FormFieldError message={checkoutErrors.phone} />
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-2">
+                  <label
+                    htmlFor="checkout-street"
+                    className="block text-sm mb-2"
+                  >
                     {language === "ar" ? "العنوان" : "Street Address"}
                   </label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                    id="checkout-street"
+                    value={billing.street}
+                    onChange={(e) => {
+                      setBilling((b) => ({ ...b, street: e.target.value }));
+                      clearCheckoutField("street");
+                    }}
+                    autoComplete="street-address"
+                    aria-invalid={Boolean(checkoutErrors.street)}
+                    className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.street))}`}
                   />
+                  <FormFieldError message={checkoutErrors.street} />
                 </div>
 
                 <div>
@@ -359,18 +597,25 @@ export function Checkout() {
                       const letters = raw.slice(0, 4).replace(/[^A-Z]/g, "");
                       const nums = raw.slice(4, 8).replace(/[^0-9]/g, "");
                       setNationalShortAddress((letters + nums).slice(0, 8));
+                      clearCheckoutField("nationalShortAddress");
                     }}
                     placeholder={
                       language === "ar" ? "مثال: ABCD1234" : "e.g. RJDG2929"
                     }
                     pattern="[A-Za-z]{4}[0-9]{4}"
-                    className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors font-mono tracking-widest uppercase"
+                    aria-invalid={Boolean(
+                      checkoutErrors.nationalShortAddress,
+                    )}
+                    className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors font-mono tracking-widest uppercase ${inputBorderClass(Boolean(checkoutErrors.nationalShortAddress))}`}
                   />
                   <p className="text-xs text-muted-foreground mt-1.5">
                     {language === "ar"
                       ? "٤ أحرف إنجليزية ثم ٤ أرقام (بدون مسافات)."
                       : "4 English letters followed by 4 digits (no spaces)."}
                   </p>
+                  <FormFieldError
+                    message={checkoutErrors.nationalShortAddress}
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -405,42 +650,87 @@ export function Checkout() {
                       id="checkout-district"
                       type="text"
                       value={district}
-                      onChange={(e) => setDistrict(e.target.value)}
-                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      onChange={(e) => {
+                        setDistrict(e.target.value);
+                        clearCheckoutField("district");
+                      }}
                       placeholder={
                         language === "ar" ? "اسم الحي" : "District name"
                       }
+                      autoComplete="address-level3"
+                      aria-invalid={Boolean(checkoutErrors.district)}
+                      className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.district))}`}
                     />
+                    <FormFieldError message={checkoutErrors.district} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm mb-2">
+                    <label
+                      htmlFor="checkout-city"
+                      className="block text-sm mb-2"
+                    >
                       {language === "ar" ? "المدينة" : "City"}
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      id="checkout-city"
+                      value={billing.city}
+                      onChange={(e) => {
+                        setBilling((b) => ({ ...b, city: e.target.value }));
+                        clearCheckoutField("city");
+                      }}
+                      autoComplete="address-level2"
+                      aria-invalid={Boolean(checkoutErrors.city)}
+                      className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.city))}`}
                     />
+                    <FormFieldError message={checkoutErrors.city} />
                   </div>
                   <div>
-                    <label className="block text-sm mb-2">
+                    <label
+                      htmlFor="checkout-province"
+                      className="block text-sm mb-2"
+                    >
                       {language === "ar" ? "المنطقة" : "State/Province"}
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      id="checkout-province"
+                      value={billing.province}
+                      onChange={(e) => {
+                        setBilling((b) => ({
+                          ...b,
+                          province: e.target.value,
+                        }));
+                        clearCheckoutField("province");
+                      }}
+                      autoComplete="address-level1"
+                      aria-invalid={Boolean(checkoutErrors.province)}
+                      className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.province))}`}
                     />
+                    <FormFieldError message={checkoutErrors.province} />
                   </div>
                   <div>
-                    <label className="block text-sm mb-2">
+                    <label
+                      htmlFor="checkout-postal"
+                      className="block text-sm mb-2"
+                    >
                       {language === "ar" ? "الرمز البريدي" : "Postal Code"}
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 bg-input-background border-2 border-border rounded-xl focus:border-primary focus:outline-none transition-colors"
+                      id="checkout-postal"
+                      value={billing.postal}
+                      onChange={(e) => {
+                        setBilling((b) => ({ ...b, postal: e.target.value }));
+                        clearCheckoutField("postal");
+                      }}
+                      autoComplete="postal-code"
+                      aria-invalid={Boolean(checkoutErrors.postal)}
+                      className={`w-full px-4 py-3 bg-input-background border-2 rounded-xl focus:outline-none transition-colors ${inputBorderClass(Boolean(checkoutErrors.postal))}`}
                     />
+                    <FormFieldError message={checkoutErrors.postal} />
                   </div>
                 </div>
               </div>
@@ -690,5 +980,6 @@ export function Checkout() {
         </div>
       </div>
     </div>
+    </>
   );
 }

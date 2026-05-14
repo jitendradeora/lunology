@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ShoppingCart,
@@ -9,16 +9,23 @@ import {
   X,
   ZoomIn,
   Star,
+  Zap,
 } from "lucide-react";
 import { useCart } from "../CartProvider";
 import { useLanguage } from "../LanguageProvider";
-import { SEO, generateProductSchema, generateBreadcrumbSchema } from "../SEO";
+import {
+  SEO,
+  generateProductSchema,
+  generateBreadcrumbSchema,
+  combineJsonLdGraph,
+} from "../SEO";
 import { getProductDetail, getRelatedProducts } from "../../data/productDetails";
 import { SHOP_PRODUCTS } from "../../data/catalog";
 import { NotFound } from "./NotFound";
 
 export function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const product = getProductDetail(id);
   const { addToCart } = useCart();
   const { t, language } = useLanguage();
@@ -97,6 +104,22 @@ export function ProductDetail() {
     // You could add a toast notification here
   };
 
+  const handleBuyNow = () => {
+    if (!product.inStock || (hasVariants && !allVariantsSelected)) {
+      return;
+    }
+    addToCart({
+      id: product.id,
+      name: product.name,
+      nameAr: product.nameAr,
+      price: product.price,
+      image: product.images[0],
+      variants: hasVariants ? selectedVariants : undefined,
+      quantity,
+    });
+    navigate("/checkout");
+  };
+
   // Generate breadcrumb schema
   const breadcrumbs = [
     { name: "Home", url: "/" },
@@ -116,10 +139,7 @@ export function ProductDetail() {
 
   const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
 
-  const combinedSchema = {
-    "@context": "https://schema.org",
-    "@graph": [productSchema, breadcrumbSchema],
-  };
+  const combinedSchema = combineJsonLdGraph(productSchema, breadcrumbSchema);
 
   return (
     <>
@@ -129,6 +149,7 @@ export function ProductDetail() {
         keywords={`${product.name}, ${product.categoryName}, ${product.subcategory}, Lunology, spiritual products, cosmic wisdom`}
         image={product.images[0]}
         type="product"
+        canonicalPathOrUrl={`/product/${product.id}`}
         schema={combinedSchema}
       />
       <div className="pt-20 min-h-screen">
@@ -363,31 +384,53 @@ export function ProductDetail() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={handleAddToCart}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    disabled={
-                      !product.inStock || (hasVariants && !allVariantsSelected)
-                    }
-                    title={
-                      !product.inStock
-                        ? t("product.outOfStock")
-                        : hasVariants && !allVariantsSelected
-                          ? language === "ar"
-                            ? "يرجى اختيار جميع الخيارات"
-                            : "Please select all options"
-                          : ""
-                    }
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    {t("product.addToCart")}
-                  </button>
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
+                  <div className="flex flex-1 flex-col sm:flex-row gap-3 min-w-0">
+                    <button
+                      type="button"
+                      onClick={handleAddToCart}
+                      className="flex-1 flex items-center justify-center gap-2 px-5 py-4 bg-primary text-primary-foreground rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      disabled={
+                        !product.inStock || (hasVariants && !allVariantsSelected)
+                      }
+                      title={
+                        !product.inStock
+                          ? t("product.outOfStock")
+                          : hasVariants && !allVariantsSelected
+                            ? language === "ar"
+                              ? "يرجى اختيار جميع الخيارات"
+                              : "Please select all options"
+                            : ""
+                      }
+                    >
+                      <ShoppingCart className="w-5 h-5 shrink-0" />
+                      {t("product.addToCart")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleBuyNow}
+                      className="flex-1 flex items-center justify-center gap-2 px-5 py-4 border-2 border-primary bg-background text-primary rounded-xl hover:bg-primary/10 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      disabled={
+                        !product.inStock || (hasVariants && !allVariantsSelected)
+                      }
+                      title={
+                        !product.inStock
+                          ? t("product.outOfStock")
+                          : hasVariants && !allVariantsSelected
+                            ? language === "ar"
+                              ? "يرجى اختيار جميع الخيارات"
+                              : "Please select all options"
+                            : ""
+                      }
+                    >
+                      <Zap className="w-5 h-5 shrink-0" />
+                      {t("product.buyNow")}
+                    </button>
+                  </div>
                   <button
                     type="button"
                     onClick={() => setIsFavorite(!isFavorite)}
-                    className={`p-4 border-2 rounded-xl transition-all ${
+                    className={`sm:self-auto shrink-0 p-4 border-2 rounded-xl transition-all ${
                       isFavorite
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border hover:border-primary hover:bg-muted"
@@ -404,8 +447,8 @@ export function ProductDetail() {
                 {hasVariants && !allVariantsSelected && (
                   <p className="text-sm text-muted-foreground text-center">
                     {language === "ar"
-                      ? "* يرجى اختيار جميع الخيارات قبل الإضافة إلى السلة"
-                      : "* Please select all options before adding to cart"}
+                      ? "* يرجى اختيار جميع الخيارات قبل الإضافة إلى السلة أو الشراء"
+                      : "* Please select all options before adding to cart or buying"}
                   </p>
                 )}
               </div>

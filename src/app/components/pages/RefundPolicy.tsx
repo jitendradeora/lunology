@@ -1,7 +1,19 @@
 import { motion } from 'motion/react';
+import { SEO, generateBreadcrumbSchema } from '../SEO';
 
 export function RefundPolicy() {
   return (
+    <>
+      <SEO
+        title="Refund Policy | Lunology"
+        description="Lunology refund and return policy for physical products, digital goods, and how to request a return within 14 days where applicable."
+        keywords="Lunology refund policy, returns, exchanges, digital products"
+        canonicalPathOrUrl="/refund-policy"
+        schema={generateBreadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Refund Policy', url: '/refund-policy' },
+        ])}
+      />
     <div className="pt-20 min-h-screen">
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto">
@@ -84,5 +96,6 @@ export function RefundPolicy() {
         </div>
       </section>
     </div>
+    </>
   );
 }

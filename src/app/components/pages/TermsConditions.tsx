@@ -1,7 +1,19 @@
 import { motion } from 'motion/react';
+import { SEO, generateBreadcrumbSchema } from '../SEO';
 
 export function TermsConditions() {
   return (
+    <>
+      <SEO
+        title="Terms & Conditions | Lunology"
+        description="Terms of use for the Lunology website, purchases, digital and physical products, and limitations of liability."
+        keywords="Lunology terms, conditions of sale, website terms, Saudi Arabia"
+        canonicalPathOrUrl="/terms-conditions"
+        schema={generateBreadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Terms & Conditions', url: '/terms-conditions' },
+        ])}
+      />
     <div className="pt-20 min-h-screen">
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto">
@@ -120,5 +132,6 @@ export function TermsConditions() {
         </div>
       </section>
     </div>
+    </>
   );
 }

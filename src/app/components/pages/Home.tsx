@@ -1,10 +1,17 @@
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
+import { useState, type FormEvent } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { HeroWithMoon } from "../HeroWithMoon";
 import { MoonPhaseWidget } from "../MoonPhaseWidget";
-import { SEO, organizationSchema, websiteSchema } from "../SEO";
+import { SEO, organizationSchema, websiteSchema, combineJsonLdGraph } from "../SEO";
+import { FormFieldError } from "../FormFieldError";
+import {
+  validateEmail,
+  inputBorderClass,
+  type Lang,
+} from "../../lib/formValidation";
 
 const featuredProducts = [
   {
@@ -59,6 +66,21 @@ const featuredProducts = [
 
 export function Home() {
   const { t, language } = useLanguage();
+  const lang: Lang = language === "ar" ? "ar" : "en";
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterError, setNewsletterError] = useState<string | null>(null);
+  const [newsletterOk, setNewsletterOk] = useState(false);
+
+  const handleNewsletterSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const err = validateEmail(newsletterEmail, lang);
+    setNewsletterError(err);
+    if (err) {
+      setNewsletterOk(false);
+      return;
+    }
+    setNewsletterOk(true);
+  };
 
   const productNames: Record<number, { en: string; ar: string }> = {
     1: { en: "Solar Flame", ar: "سولار فلايم" },
@@ -78,10 +100,7 @@ export function Home() {
     Digital: { en: "Digital", ar: "رقمي" },
   };
 
-  const homeSchema = {
-    "@context": "https://schema.org",
-    "@graph": [organizationSchema, websiteSchema],
-  };
+  const homeSchema = combineJsonLdGraph(organizationSchema, websiteSchema);
 
   return (
     <div className="pt-20">
@@ -89,6 +108,7 @@ export function Home() {
         title="Lunology - Your Cosmic Companion for Self-Discovery & Spiritual Growth"
         description="Discover Lunology - a cosmic companion on your journey of self-discovery, intuition, and inner connection. Explore dream journals, lunar planners, meditation guides, and spiritual products combining ancient wisdom with modern thought."
         keywords="Lunology, moon phases, dream interpretation, lunar calendar, meditation, spiritual products, cosmic wisdom, self-discovery, mindfulness, astrology, zodiac houses, dream journal, annual planner, BioGeometry, Elements of Life"
+        canonicalPathOrUrl="/"
         schema={homeSchema}
       />
 
@@ -271,24 +291,48 @@ export function Home() {
               Subscribe to receive lunar insights, new arrivals, and exclusive
               offerings
             </p>
-            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <label htmlFor="newsletter-email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="newsletter-email"
-                type="email"
-                placeholder="Your email"
-                autoComplete="email"
-                required
-                className="flex-1 px-6 py-3.5 bg-input-background border-2 border-border rounded-full focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-              />
-              <button
-                type="submit"
-                className="px-8 py-3.5 bg-primary text-primary-foreground rounded-full hover:shadow-2xl hover:shadow-primary/30 hover:scale-105 transition-all"
-              >
-                Subscribe
-              </button>
+            <form
+              className="max-w-md mx-auto space-y-2"
+              onSubmit={handleNewsletterSubmit}
+              noValidate
+            >
+              <div className="flex flex-col sm:flex-row gap-4">
+                <label htmlFor="newsletter-email" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  name="email"
+                  value={newsletterEmail}
+                  onChange={(e) => {
+                    setNewsletterEmail(e.target.value);
+                    setNewsletterError(null);
+                    setNewsletterOk(false);
+                  }}
+                  placeholder="Your email"
+                  autoComplete="email"
+                  aria-invalid={Boolean(newsletterError)}
+                  className={`flex-1 px-6 py-3.5 bg-input-background border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${inputBorderClass(Boolean(newsletterError))}`}
+                />
+                <button
+                  type="submit"
+                  className="px-8 py-3.5 bg-primary text-primary-foreground rounded-full hover:shadow-2xl hover:shadow-primary/30 hover:scale-105 transition-all shrink-0"
+                >
+                  Subscribe
+                </button>
+              </div>
+              <FormFieldError message={newsletterError} />
+              {newsletterOk && (
+                <p
+                  className="text-sm text-green-600 dark:text-green-400 text-center sm:text-left"
+                  role="status"
+                >
+                  {lang === "ar"
+                    ? "تم التحقق من البريد. (عرض تجريبي)"
+                    : "Email validated. (Demo — not subscribed yet.)"}
+                </p>
+              )}
             </form>
           </motion.div>
         </div>

@@ -1,7 +1,19 @@
 import { motion } from 'motion/react';
+import { SEO, generateBreadcrumbSchema } from '../SEO';
 
 export function PrivacyPolicy() {
   return (
+    <>
+      <SEO
+        title="Privacy Policy | Lunology"
+        description="How Lunology collects, uses, and protects your personal information when you shop, subscribe, or use our website."
+        keywords="Lunology privacy policy, data protection, cookies, newsletter, Saudi Arabia"
+        canonicalPathOrUrl="/privacy-policy"
+        schema={generateBreadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Privacy Policy', url: '/privacy-policy' },
+        ])}
+      />
     <div className="pt-20 min-h-screen">
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto">
@@ -138,5 +150,6 @@ export function PrivacyPolicy() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
+import {
+  SEO,
+  generateFAQPageSchema,
+  generateBreadcrumbSchema,
+  combineJsonLdGraph,
+} from '../SEO';
 
 const faqs = [
   {
@@ -58,7 +64,23 @@ const faqs = [
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  const faqSchema = combineJsonLdGraph(
+    generateBreadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'FAQ', url: '/faq' },
+    ]),
+    generateFAQPageSchema(faqs),
+  );
+
   return (
+    <>
+      <SEO
+        title="FAQ | Lunology"
+        description="Answers about Lunology orders, shipping in Saudi Arabia, digital products, returns, payments (Telr and Tamara), and using lunar resources in your practice."
+        keywords="Lunology FAQ, shipping Saudi Arabia, Telr, Tamara, digital products, returns, lunar journal"
+        canonicalPathOrUrl="/faq"
+        schema={faqSchema}
+      />
     <div className="pt-20 min-h-screen">
       {/* Hero Banner */}
       <section className="relative py-24 px-4 overflow-hidden" style={{ backgroundColor: 'var(--banner-bg)', color: 'var(--banner-foreground)' }}>
@@ -150,5 +172,6 @@ export function FAQ() {
         </div>
       </section>
     </div>
+    </>
   );
 }

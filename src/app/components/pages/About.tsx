@@ -8,6 +8,7 @@ export function About() {
         title="Our Story - Lunology | A Cosmic Journey of Self-Discovery"
         description="Learn about Lunology's mission to guide you on a journey of self-discovery, intuition, and inner connection through ancient wisdom and modern thought. Discover our cosmic companion products."
         keywords="Lunology story, about Lunology, cosmic wisdom, spiritual journey, self-discovery, ancient wisdom, modern spirituality"
+        canonicalPathOrUrl="/about"
       />
       <div className="pt-20 min-h-screen">
         {/* Hero Banner */}

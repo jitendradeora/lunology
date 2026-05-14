@@ -55,6 +55,7 @@ export function ElementsOfLife() {
         title={language === 'ar' ? 'عناصر الحياة - لونولوجي' : 'Elements of Life - Lunology'}
         description={language === 'ar' ? 'استكشف العناصر الخمسة الأساسية للحياة وكيف تشكل وجودنا وروحانيتنا' : 'Explore the five fundamental elements of life and how they shape our existence and spirituality'}
         keywords="elements, water, air, fire, earth, ether, spirituality, cosmic wisdom, consciousness"
+        canonicalPathOrUrl="/elements"
       />
 
       <div className="pt-20 min-h-screen">
