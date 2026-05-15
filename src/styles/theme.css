@@ -228,6 +228,21 @@
     line-height: 1.5;
   }
 
+  /* Native select: room for dropdown arrow on the inline-end (right in EN, left in AR) */
+  select {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+    padding-inline-end: 2.5rem;
+    cursor: pointer;
+  }
+
+  /* Custom chevron selects (appearance-none) */
+  select.select-custom {
+    padding-inline-end: 2.25rem;
+    padding-inline-start: 0.75rem;
+  }
+
   /* Arabic Font Override */
   html[lang="ar"] body {
     font-family: var(--font-arabic);
@@ -242,7 +257,8 @@
 
   html[lang="ar"] label,
   html[lang="ar"] button,
-  html[lang="ar"] input {
+  html[lang="ar"] input,
+  html[lang="ar"] select {
     font-family: var(--font-arabic);
   }
 

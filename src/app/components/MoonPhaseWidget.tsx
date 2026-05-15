@@ -432,7 +432,7 @@ export function MoonPhaseWidget() {
                 id="moon-phase-location"
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="appearance-none bg-card text-foreground border border-border rounded-lg px-3 py-1.5 pr-8 text-xs hover:border-primary transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="select-custom appearance-none bg-card text-foreground border border-border rounded-lg py-1.5 text-xs hover:border-primary transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
                 style={{
                   colorScheme: theme === "dark" ? "dark" : "light",
                   //colorScheme: theme === "light" ? "light" : "dark",
@@ -447,7 +447,7 @@ export function MoonPhaseWidget() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
+              <ChevronDown className="absolute end-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
             </div>
           </div>
 
