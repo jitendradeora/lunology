@@ -347,22 +347,7 @@ export const SHOP_PRODUCTS: CatalogProduct[] = [
     subcategory: 'Trays',
     subcategoryAr: 'شحن',
     inStock: true,
-  },
-   {
-    id: 210,
-    name: 'Sirius Odyssey CD',
-    nameAr: 'CD سيريوس أوديسي الموسيقي',
-    description:
-      'n the Ancient Egyptian temple science music was used to enter into resonance with the Divine laws of creation.',
-    descriptionAr: 'في علم المعادن المصري القديم، كانت الموسيقى تستخدم للدخول في الرنين مع قوانين الخلق الشرعي.',
-    price: 179,
-    image:
-      biogeometry_10,
-    category: 'biogeometry',
-    subcategory: 'CDs',
-    subcategoryAr: 'CDs',
-    inStock: true,
-  },
+  } 
 ];
 
 const byId = new Map(SHOP_PRODUCTS.map((p) => [p.id, p]));

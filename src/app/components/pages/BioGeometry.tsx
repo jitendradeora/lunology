@@ -11,15 +11,6 @@ export function BioGeometry() {
 
   const principles = [
     {
-      icon: Hexagon,
-      titleEn: "Sacred Geometry",
-      titleAr: "الهندسة المقدسة",
-      descriptionEn:
-        "Ancient geometric patterns that carry universal energy and harmony. These shapes resonate with the fundamental structure of creation.",
-      descriptionAr:
-        "الأنماط الهندسية القديمة التي تحمل الطاقة والانسجام الكوني. هذه الأشكال تتردد مع البنية الأساسية للخلق.",
-    },
-    {
       icon: Waves,
       titleEn: "Energy Balancing",
       titleAr: "توازن الطاقة",
@@ -61,7 +52,7 @@ export function BioGeometry() {
             ? "اكتشف علم الهندسة الحيوية وكيف تؤثر الأشكال والأنماط الهندسية على طاقتنا ورفاهيتنا"
             : "Discover the science of BioGeometry and how geometric shapes and patterns affect our energy and wellbeing"
         }
-        keywords="biogeometry, sacred geometry, energy healing, vibrational medicine, environmental harmony, consciousness"
+        keywords="biogeometry, energy healing, vibrational medicine, environmental harmony, consciousness"
         canonicalPathOrUrl="/biogeometry"
       />
 
@@ -121,11 +112,6 @@ export function BioGeometry() {
                 {language === "ar"
                   ? "الهندسة الحيوية هي علم يدرس تأثير الأشكال والألوان والأصوات والحركات الهندسية على الطاقة الحيوية للإنسان والبيئة. تم تطوير هذا العلم من قبل الدكتور إبراهيم كريم، ويجمع بين الحكمة القديمة والعلم الحديث لخلق الانسجام والتوازن في حياتنا."
                   : "BioGeometry is a science that studies the effect of geometric shapes, colors, sounds, and motions on the vital energy of humans and the environment. Developed by Dr. Ibrahim Karim, this science combines ancient wisdom with modern understanding to create harmony and balance in our lives."}
-              </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                {language === "ar"
-                  ? "من خلال استخدام مبادئ الهندسة المقدسة والتصميم الواعي، تساعدنا الهندسة الحيوية على تحويل بيئاتنا إلى فضاءات داعمة تعزز الصحة والرفاهية والوعي الروحي."
-                  : "Through the use of sacred geometry principles and conscious design, BioGeometry helps us transform our environments into supportive spaces that enhance health, wellbeing, and spiritual awareness."}
               </p>
             </motion.div>
 
