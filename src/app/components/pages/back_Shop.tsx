@@ -1,92 +1,102 @@
-import { useState } from 'react';
-import { Link, useParams } from 'react-router';
-import { motion } from 'motion/react';
-import { SlidersHorizontal } from 'lucide-react';
+import { useState } from "react";
+import { Link, useParams } from "react-router";
+import { motion } from "motion/react";
+import { SlidersHorizontal } from "lucide-react";
 
 const products = [
   {
     id: 1,
-    name: 'Lunar Phase Journal',
+    name: "Lunar Phase Journal",
     price: 299,
-    image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&q=80',
-    category: 'physical',
-    subcategory: 'Journals',
+    image:
+      "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&q=80",
+    category: "physical",
+    subcategory: "Journals",
     inStock: true,
   },
   {
     id: 2,
-    name: 'Cosmic Meditation Guide',
+    name: "Cosmic Meditation Guide",
     price: 149,
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80',
-    category: 'digital',
-    subcategory: 'Guides',
+    image:
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    category: "digital",
+    subcategory: "Guides",
     inStock: true,
   },
   {
     id: 3,
-    name: 'Celestial Tarot Deck',
+    name: "Celestial Tarot Deck",
     price: 399,
-    image: 'https://images.unsplash.com/photo-1591328194231-d5e1f2c78c2f?w=800&q=80',
-    category: 'physical',
-    subcategory: 'Divination',
+    image:
+      "https://images.unsplash.com/photo-1591328194231-d5e1f2c78c2f?w=800&q=80",
+    category: "physical",
+    subcategory: "Divination",
     inStock: true,
   },
   {
     id: 4,
-    name: 'Moon Ritual Kit',
+    name: "Moon Ritual Kit",
     price: 499,
-    image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80',
-    category: 'physical',
-    subcategory: 'Ritual Tools',
+    image:
+      "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80",
+    category: "physical",
+    subcategory: "Ritual Tools",
     inStock: true,
   },
   {
     id: 5,
-    name: 'Astrology Birth Chart Reading',
+    name: "Astrology Birth Chart Reading",
     price: 199,
-    image: 'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?w=800&q=80',
-    category: 'digital',
-    subcategory: 'Readings',
+    image:
+      "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?w=800&q=80",
+    category: "digital",
+    subcategory: "Readings",
     inStock: true,
   },
   {
     id: 6,
-    name: 'Crystal Healing Set',
+    name: "Crystal Healing Set",
     price: 349,
-    image: 'https://images.unsplash.com/photo-1602524206684-76b7ba355c3f?w=800&q=80',
-    category: 'physical',
-    subcategory: 'Crystals',
+    image:
+      "https://images.unsplash.com/photo-1602524206684-76b7ba355c3f?w=800&q=80",
+    category: "physical",
+    subcategory: "Crystals",
     inStock: true,
   },
   {
     id: 7,
-    name: 'Moon Phase Calendar 2026',
+    name: "Moon Phase Calendar 2026",
     price: 99,
-    image: 'https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80',
-    category: 'digital',
-    subcategory: 'Calendars',
+    image:
+      "https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&q=80",
+    category: "digital",
+    subcategory: "Calendars",
     inStock: true,
   },
   {
     id: 8,
-    name: 'Sacred Geometry Oracle Cards',
+    name: "Sacred Geometry Oracle Cards",
     price: 279,
-    image: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&q=80',
-    category: 'physical',
-    subcategory: 'Divination',
+    image:
+      "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=800&q=80",
+    category: "physical",
+    subcategory: "Divination",
     inStock: false,
   },
 ];
 
 export function Shop() {
   const { category } = useParams();
-  const [selectedCategory, setSelectedCategory] = useState(category || 'all');
+  const [selectedCategory, setSelectedCategory] = useState(category || "all");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
   const [showFilters, setShowFilters] = useState(false);
 
   const filteredProducts = products.filter((product) => {
-    const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
-    const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
+    const categoryMatch =
+      selectedCategory === "all" || product.category === selectedCategory;
+    const priceMatch =
+      product.price >= priceRange[0] && product.price <= priceRange[1];
     return categoryMatch && priceMatch;
   });
 
@@ -95,7 +105,10 @@ export function Shop() {
       {/* Hero */}
       <section className="relative py-24 px-4 bg-gradient-to-b from-muted/30 to-background">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1
+            className="text-5xl md:text-6xl mb-4"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
             Shop
           </h1>
           <p className="text-xl text-muted-foreground">
@@ -119,17 +132,21 @@ export function Shop() {
                   Filters
                 </button>
 
-                <div className={`space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+                <div
+                  className={`space-y-6 ${showFilters ? "block" : "hidden lg:block"}`}
+                >
                   {/* Category Filter */}
                   <div>
-                    <h3 className="mb-4 text-sm tracking-wider uppercase text-secondary">Category</h3>
+                    <h3 className="mb-4 text-sm tracking-wider uppercase text-secondary">
+                      Category
+                    </h3>
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
                           name="category"
                           value="all"
-                          checked={selectedCategory === 'all'}
+                          checked={selectedCategory === "all"}
                           onChange={(e) => setSelectedCategory(e.target.value)}
                           className="w-4 h-4 text-primary"
                         />
@@ -140,7 +157,7 @@ export function Shop() {
                           type="radio"
                           name="category"
                           value="physical"
-                          checked={selectedCategory === 'physical'}
+                          checked={selectedCategory === "physical"}
                           onChange={(e) => setSelectedCategory(e.target.value)}
                           className="w-4 h-4 text-primary"
                         />
@@ -151,7 +168,7 @@ export function Shop() {
                           type="radio"
                           name="category"
                           value="digital"
-                          checked={selectedCategory === 'digital'}
+                          checked={selectedCategory === "digital"}
                           onChange={(e) => setSelectedCategory(e.target.value)}
                           className="w-4 h-4 text-primary"
                         />
@@ -162,13 +179,20 @@ export function Shop() {
 
                   {/* Price Filter */}
                   <div>
-                    <h3 className="mb-4 text-sm tracking-wider uppercase text-secondary">Price Range</h3>
+                    <h3 className="mb-4 text-sm tracking-wider uppercase text-secondary">
+                      Price Range
+                    </h3>
                     <div className="space-y-4">
                       <div className="flex items-center gap-4">
                         <input
                           type="number"
                           value={priceRange[0]}
-                          onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
+                          onChange={(e) =>
+                            setPriceRange([
+                              parseInt(e.target.value) || 0,
+                              priceRange[1],
+                            ])
+                          }
                           className="w-full px-3 py-2 bg-input-background border border-border rounded"
                           placeholder="Min"
                         />
@@ -176,7 +200,12 @@ export function Shop() {
                         <input
                           type="number"
                           value={priceRange[1]}
-                          onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 500])}
+                          onChange={(e) =>
+                            setPriceRange([
+                              priceRange[0],
+                              parseInt(e.target.value) || 500,
+                            ])
+                          }
                           className="w-full px-3 py-2 bg-input-background border border-border rounded"
                           placeholder="Max"
                         />
@@ -191,7 +220,8 @@ export function Shop() {
             <div className="flex-1">
               <div className="mb-6 flex items-center justify-between">
                 <p className="text-muted-foreground">
-                  {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+                  {filteredProducts.length}{" "}
+                  {filteredProducts.length === 1 ? "product" : "products"}
                 </p>
               </div>
 
@@ -213,16 +243,25 @@ export function Shop() {
                         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         {!product.inStock && (
                           <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center">
-                            <span className="px-4 py-2 bg-muted border border-border text-sm rounded-full">Out of Stock</span>
+                            <span className="px-4 py-2 bg-muted border border-border text-sm rounded-full">
+                              Out of Stock
+                            </span>
                           </div>
                         )}
                       </div>
                       <div className="space-y-2">
-                        <p className="text-xs text-primary tracking-wider uppercase">{product.subcategory}</p>
-                        <h3 className="text-lg group-hover:text-primary transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
+                        <p className="text-xs text-primary tracking-wider uppercase">
+                          {product.subcategory}
+                        </p>
+                        <h3
+                          className="text-lg group-hover:text-primary transition-colors"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
                           {product.name}
                         </h3>
-                        <p className="text-muted-foreground">SAR {product.price}</p>
+                        <p className="text-muted-foreground">
+                          SAR {product.price}
+                        </p>
                       </div>
                     </Link>
                   </motion.div>
@@ -231,7 +270,9 @@ export function Shop() {
 
               {filteredProducts.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="text-muted-foreground">No products found matching your criteria.</p>
+                  <p className="text-muted-foreground">
+                    No products found matching your criteria.
+                  </p>
                 </div>
               )}
             </div>

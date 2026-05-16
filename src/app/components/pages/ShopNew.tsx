@@ -251,45 +251,6 @@ export function Shop() {
                 className={`${showFilters ? "flex" : "hidden lg:flex"} flex-wrap items-center gap-3 w-full lg:w-auto`}
               >
                 {/* Price Range */}
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-xl">
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">
-                      {t("shop.priceRange")}:
-                    </span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={priceRange[0]}
-                      onChange={(e) => setMinPrice(e.target.value)}
-                      onBlur={validatePricesOnBlur}
-                      className={`w-16 px-2 py-1 bg-background border-2 rounded text-sm focus:outline-none ${inputBorderClass(Boolean(priceFilterError))}`}
-                      placeholder={t("shop.min")}
-                      aria-label={
-                        language === "ar"
-                          ? "الحد الأدنى للسعر"
-                          : "Minimum price"
-                      }
-                      aria-invalid={Boolean(priceFilterError)}
-                    />
-                    <span>-</span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={priceRange[1]}
-                      onChange={(e) => setMaxPrice(e.target.value)}
-                      onBlur={validatePricesOnBlur}
-                      className={`w-16 px-2 py-1 bg-background border-2 rounded text-sm focus:outline-none ${inputBorderClass(Boolean(priceFilterError))}`}
-                      placeholder={t("shop.max")}
-                      aria-label={
-                        language === "ar"
-                          ? "الحد الأقصى للسعر"
-                          : "Maximum price"
-                      }
-                      aria-invalid={Boolean(priceFilterError)}
-                    />
-                  </div>
-                  <FormFieldError message={priceFilterError} />
-                </div>
 
                 {/* Sort */}
                 <div className="relative">

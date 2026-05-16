@@ -171,13 +171,6 @@ export function Navigation() {
                             to={`/product/${product.id}`}
                             className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-all group"
                           >
-                            <div className="w-14 h-14 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                              />
-                            </div>
                             <div className="flex-1 min-w-0">
                               <span className="text-sm font-medium block truncate group-hover:text-primary transition-colors">
                                 {language === "ar"
@@ -281,13 +274,6 @@ export function Navigation() {
                             to={`/product/${product.id}`}
                             className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-all group"
                           >
-                            <div className="w-14 h-14 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                              />
-                            </div>
                             <div className="flex-1 min-w-0">
                               <span className="text-sm font-medium block truncate group-hover:text-primary transition-colors">
                                 {language === "ar"
